@@ -1,0 +1,35 @@
+{
+  "name": "curriculum-vitae-server",
+  "version": "1.0.0",
+  "description": "Express + MySQL",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.8.1",
+    "mysql": "^2.13.0",
+    "serve-favicon": "~2.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TaylorPzreal/curriculum-vitae-server.git"
+  },
+  "keywords": [
+    "Express",
+    "MySQL"
+  ],
+  "author": "TaylorPzreal <taylorpzreal@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TaylorPzreal/curriculum-vitae-server/issues"
+  },
+  "homepage": "https://github.com/TaylorPzreal/curriculum-vitae-server#readme"
+}
