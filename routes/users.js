@@ -18,7 +18,7 @@ router.get('/query', (req, res, next) => {
 });
 
 // Query All
-router.get('/queyAll', (req, res, next) => {
+router.get('/queryAll', (req, res, next) => {
   userDao.queryAll(req, res, next);
 });
 
@@ -28,7 +28,7 @@ router.get('/delete', (req, res, next) => {
 });
 
 // Update
-router.post('update', (req, res, next) => {
+router.post('/update', (req, res, next) => {
   userDao.update(req, res, next);
 });
 

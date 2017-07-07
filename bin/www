@@ -102,5 +102,5 @@ function onListening () {
     `port ${addr.port}`;
   debug(`Listening on ${bind}`);
 
-  console.warn('服务启动成功: ', bind, addr);
+  console.warn('服务启动成功: ', bind);
 }

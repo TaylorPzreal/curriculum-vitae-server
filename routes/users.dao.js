@@ -18,7 +18,7 @@ function responseJSON (res, result) {
 module.exports = {
   add (req, res) {
     pool.getConnection((err, connection) => {
-      const param = req.body;
+      const param = req.query;
       connection.query(sql.insert, [param.name, param.age], (error, result) => {
         if (err) {
           throw err;
@@ -33,6 +33,70 @@ module.exports = {
 
         // 释放连接
         connection.release();
+      });
+    });
+  },
+  queryById (req, res) {
+    pool.getConnection((err, connection) => {
+      const id = req.query.id;
+      
+      connection.query(sql.queryById, id, (error, result) => {
+        console.warn(error, result);
+        if (err) {
+          throw err;
+        } else {
+          responseJSON(res, result);
+          connection.release();
+        }
+      });
+    });
+  },
+  queryAll (req, res) {
+    pool.getConnection((err, connection) => {
+      connection.query(sql.queryAll, (error, result) => {
+        responseJSON(res, result);
+        connection.release(); 
+      });
+    });
+  },
+  update (req, res) {
+    const param = req.query;
+
+    if (param.name === null || param.age === null || param.id === null) {
+      responseJSON(res, undefined);
+      return;
+    }
+
+    pool.getConnection((err, connection) => {
+      connection.query(sql.update, [param.name, param.age, +param.id], (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          result = {
+            code: 2000,
+            msg: 'Update Success'
+          };
+          responseJSON(res, result);
+          connection.release();
+        }
+      });
+    });
+  },
+  delete (req, res) {
+    const id = req.query.id;
+
+    pool.getConnection((err, connection) => {
+      connection.query(sql.delete, id, (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          result = {
+            code: 2000,
+            msg: 'Delete Success.'
+          };
+          responseJSON(res, result);
+          connection.release();
+        }
       });
     });
   }
