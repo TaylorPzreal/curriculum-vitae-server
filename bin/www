@@ -24,7 +24,7 @@ const credentials = {
  */
 
 // const httpPort = normalizePort(process.env.PORT || '3000');
-const httpsPort = normalizePort(process.env.PORT || '443');
+const httpsPort = normalizePort(process.env.PORT || '3000');
 
 app.set('port', httpsPort);
 
