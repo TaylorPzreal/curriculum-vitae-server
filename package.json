@@ -13,10 +13,12 @@
     "mysql": "^2.13.0",
     "serve-favicon": "~2.4.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^4.1.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./bin/www" 
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
