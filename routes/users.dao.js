@@ -19,9 +19,10 @@ module.exports = {
   add (req, res) {
     pool.getConnection((err, connection) => {
       const param = req.body;
-      connection.query(sql.insert, [param.name, param.age], (result) => {
-
-        if (result) {
+      connection.query(sql.insert, [param.name, param.age], (error, result) => {
+        if (err) {
+          throw err;
+        } else {
           result = {
             code: 2000,
             msg: '添加成功'
