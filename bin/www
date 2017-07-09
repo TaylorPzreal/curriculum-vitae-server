@@ -23,8 +23,8 @@ const credentials = {
  * Get port from environment and store in Express.
  */
 
-// const httpPort = normalizePort(process.env.PORT || '3000');
-const httpsPort = normalizePort(process.env.PORT || '3000');
+// const httpPort = normalizePort(process.env.PORT || '3000'); // 443
+const httpsPort = normalizePort(process.env.PORT || '3000'); // 443
 
 app.set('port', httpsPort);
 

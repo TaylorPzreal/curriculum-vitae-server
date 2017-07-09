@@ -88,7 +88,7 @@
     }],
     // "padded-blocks": ["error", "always"],
     "space-in-parens": "error",
-    "max-len": ["error", 100],
+    "max-len": ["error", 150],
     "comma-style": ["error", "last"]
     // "comma-dangle": ["error", "always-multiline"]
   }
