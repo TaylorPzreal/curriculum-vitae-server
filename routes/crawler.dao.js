@@ -51,9 +51,26 @@ module.exports = {
           throw error;
         }
 
-        console.warn('获取成功');
+        console.warn('获取成功', result);
         connection.release();
 
+      });
+    });
+  },
+  addMovieList (param) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(sql.insertMovieList, [param.name, param.year, param.detailURL], (error, result) => {
+        if (error) {
+          throw error;
+        }
+        console.warn('添加Movie成功');
+        console.warn(result);
+
+        connection.release();
       });
     });
   }

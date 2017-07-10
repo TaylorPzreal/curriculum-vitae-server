@@ -1,14 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const superagent = require('superagent');
+const formatSuperagent = require('superagent-charset');
 const cheerio = require('cheerio');
 const crawlerDao = require('./crawler.dao');
+const mapLimit = require('async/mapLimit');
+// const iconv = require('iconv-lite');
 
 const mysql = require('mysql');
 const conf = require('../config/db');
 const sql = require('./crawler.sql');
 
 const pool = mysql.createPool(conf.mysql);
+
+// 并发连接数的计数器
+let concurrencyCount = 0;
+const fetchUrl = function (url, callback, crawlerFun) {
+  // console.warn(url, callback);
+  const delay = parseInt(Math.random() * 10000000 % 2000, 10);
+  // const delay = 3000;
+  concurrencyCount++;
+  console.warn(`现在并发数是：${concurrencyCount}, 正在访问的URL是：${url}, 耗时：${delay}`);
+  setTimeout(() => {
+    concurrencyCount--;
+
+    callback(null, crawlerFun(url));
+  }, delay);
+};
 
 // Crawer CNode
 router.get('/cnode/getResultlist', (req, res, next) => {
@@ -77,6 +95,7 @@ router.get('/cnode/getDetail', (req, res, next) => {
         }
 
         resolve(resultlist);
+        connection.release();
         res.json('Get All Success!');
       });
     });
@@ -109,5 +128,143 @@ router.get('/cnode/getDetail', (req, res, next) => {
 });
 
 // update crawler
+
+// Crawl Movies
+
+/**
+ * 抓取电影天堂电影
+ * 
+ * @param {any} url 
+ * @returns 
+ */
+function crawlerMovie (url) {
+  const resultList = [];
+
+  formatSuperagent(superagent).get(url)
+    .charset('gb2312')
+    .end((err, sres) => {
+      if (err) {
+        throw err;
+      }
+
+      // iconv.decode(sres.text, 'gb2312')
+      const $ = cheerio.load(sres.text, {
+        decodeEntities: false
+      });
+      const baseURL = 'http://www.dytt8.net';
+
+      $('.co_content8 table').each((idx, element) => {
+        const dom = $(element);
+        const a = dom.find('a.ulink');
+
+        const obj = {
+          name: a.text().match(/《(.)+》/igm)[0],
+          detailURL: baseURL + a.attr('href'),
+          year: a.text().match(/^\d{4}/)[0]
+        };
+        resultList.push(obj);
+
+        crawlerDao.addMovieList(obj);
+
+        console.warn(obj);
+      });
+    });
+
+  return resultList;
+}
+
+router.get('/movie/getResultList', (req, res, next) => {
+
+  (function () {
+
+    const urls = [];
+    for (let i = 1; i <= 10; i++) {
+      urls.push(`http://www.dytt8.net/html/gndy/dyzz/list_23_${i}.html`);
+    }
+
+    mapLimit(urls, 5, (url, callback) => {
+      fetchUrl(url, callback, crawlerMovie);
+    }, (err, results) => {
+      if (err) {
+        console.error('ERROR: ', err);
+      }
+      console.warn('添加中。。。');
+    });
+  })();
+});
+
+function crawlerMovieDetail (url) {
+  formatSuperagent(superagent).get(url)
+    .charset('gb2312')
+    .end((err, sres) => {
+      if (err) {
+        throw err;
+      }
+
+      const $ = cheerio.load(sres.text, {
+        decodeEntities: false
+      });
+
+      const dom = $('#Zoom>span>p').first();
+      const detail = dom.text();
+      const logo = $(dom.children('img')[0]).attr('src');
+
+      const obj = {
+        summary: detail.match(/◎简(.)+介(.)+$/g)[0].replace(/◎简(.)+介\s+/, '').replace(/◎(.)+$/, ''),
+        country: detail.match(/◎产\s+地(.)+$/g)[0].replace(/◎产\s+地\s+/, '').replace(/◎(.)+$/, ''),
+        type: detail.match(/◎类\s+别(.)+$/g)[0].replace(/◎类\s+别\s+/, '').replace(/◎(.)+$/, ''),
+        playtime: detail.match(/◎片\s+长(.)+$/g)[0].replace(/◎片\s+长\s+/, '').replace(/◎(.)+$/, ''),
+        publicDate: $('.co_content8 ul')
+          .text()
+          .match(/发布时间：[\d|-]{10}/g)[0]
+          .replace(/\s/g, '')
+          .replace(/发布时间：/, ''),
+        logo
+      };
+      console.warn(obj);
+
+      // crawlerDao.addMovieDetail(obj);
+
+    });
+}
+
+router.get('/movie/getDetail', (req, res, next) => {
+  
+  new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        reject(err);
+      }
+
+      connection.query(sql.queryMovies, (error, results) => {
+        if (error) {
+          throw error;
+        }
+
+        resolve(results);
+        connection.release();
+      });
+    });
+  }).then((resultList) => {
+    res.json({code: 200, data: resultList, msg: '获取所有电影成功'});
+    
+    let urls = [];
+    resultList.forEach((e) => {
+      urls.push(e.detailURL);
+    });
+    urls = [urls[1]];
+
+    mapLimit(urls, 5, (url, callback) => {
+      fetchUrl(url, callback, crawlerMovieDetail);
+    }, (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.warn('添加电影详情数据中...');
+    });
+
+
+  });
+});
 
 module.exports = router;
