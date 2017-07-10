@@ -210,20 +210,20 @@ function crawlerMovieDetail (url) {
       const logo = $(dom.children('img')[0]).attr('src');
 
       const obj = {
-        summary: detail.match(/◎简(.)+介(.)+$/g)[0].replace(/◎简(.)+介\s+/, '').replace(/◎(.)+$/, ''),
-        country: detail.match(/◎产\s+地(.)+$/g)[0].replace(/◎产\s+地\s+/, '').replace(/◎(.)+$/, ''),
-        type: detail.match(/◎类\s+别(.)+$/g)[0].replace(/◎类\s+别\s+/, '').replace(/◎(.)+$/, ''),
-        playtime: detail.match(/◎片\s+长(.)+$/g)[0].replace(/◎片\s+长\s+/, '').replace(/◎(.)+$/, ''),
+        summary: detail.match(/◎简(.)+介(.)+$/g) ? detail.match(/◎简(.)+介(.)+$/g)[0].replace(/◎简(.)+介\s+/, '').replace(/◎(.)+$/, '') : '',
+        country: detail.match(/◎国\s+家(.)+$/g) ? detail.match(/◎国\s+家(.)+$/g)[0].replace(/◎国\s+家\s+/, '').replace(/◎(.)+$/, '') : '',
+        type: detail.match(/◎类\s+别(.)+$/g) ? detail.match(/◎类\s+别(.)+$/g)[0].replace(/◎类\s+别\s+/, '').replace(/◎(.)+$/, '') : '',
+        playtime: detail.match(/◎片\s+长(.)+$/g) ? detail.match(/◎片\s+长(.)+$/g)[0].replace(/◎片\s+长\s+/, '').replace(/◎(.)+$/, '') : '',
         publicDate: $('.co_content8 ul')
           .text()
           .match(/发布时间：[\d|-]{10}/g)[0]
           .replace(/\s/g, '')
           .replace(/发布时间：/, ''),
-        logo
+        logo,
+        detailURL: url 
       };
-      console.warn(obj);
 
-      // crawlerDao.addMovieDetail(obj);
+      crawlerDao.updateMovieDetail(obj);
 
     });
 }
@@ -246,13 +246,25 @@ router.get('/movie/getDetail', (req, res, next) => {
       });
     });
   }).then((resultList) => {
-    res.json({code: 200, data: resultList, msg: '获取所有电影成功'});
+    res.json({code: 200, msg: '获取所有电影成功'});
     
-    let urls = [];
+    const urls = [];
     resultList.forEach((e) => {
       urls.push(e.detailURL);
     });
-    urls = [urls[1]];
+    // const urls = [
+    //   'http://www.dytt8.net/html/gndy/dyzz/20161031/52360.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170327/53562.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170318/53507.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170416/53745.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170416/53744.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170413/53726.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170514/53986.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170316/53482.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170310/53447.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20170310/53446.html',
+    //   'http://www.dytt8.net/html/gndy/dyzz/20161217/52754.html'
+    // ];
 
     mapLimit(urls, 5, (url, callback) => {
       fetchUrl(url, callback, crawlerMovieDetail);

@@ -73,5 +73,21 @@ module.exports = {
         connection.release();
       });
     });
+  },
+  updateMovieDetail (param) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(sql.updateMovieDetail, [param.summary, param.country, param.type, param.playtime, param.publicDate, param.logo, param.detailURL], (error, result) => {
+        if (error) {
+          throw error;
+        }
+
+        console.warn('更新Movie成功');
+        connection.release();
+      });
+    });
   }
 };
