@@ -3,13 +3,13 @@ const router = express.Router();
 const superagent = require('superagent');
 const formatSuperagent = require('superagent-charset');
 const cheerio = require('cheerio');
-const crawlerDao = require('./crawler.dao');
+const crawlerDao = require('./dao');
 const mapLimit = require('async/mapLimit');
 // const iconv = require('iconv-lite');
 
 const mysql = require('mysql');
-const conf = require('../config/db');
-const sql = require('./crawler.sql');
+const conf = require('../../config/db');
+const sql = require('./sql');
 
 const pool = mysql.createPool(conf.mysql);
 

@@ -1,6 +1,6 @@
 const mysql = require('mysql');
-const conf = require('../config/db');
-const sql = require('./users.sql');
+const conf = require('../../config/db');
+const sql = require('./sql');
 
 const pool = mysql.createPool(conf.mysql);
 

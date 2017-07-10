@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userDao = require('./users.dao');
+const userDao = require('./dao');
 
 /* GET users listing. */
 router.get('/', (req, res) => {
