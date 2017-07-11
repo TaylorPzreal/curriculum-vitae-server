@@ -19,10 +19,13 @@
     "superagent-charset": "^1.2.0"
   },
   "devDependencies": {
-    "eslint": "^4.1.1"
+    "eslint": "^4.1.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2",
+    "should": "^11.2.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "istanbul cover _mocha",
     "start": "node ./bin/www"
   },
   "repository": {

@@ -15,7 +15,8 @@
     }
   },
   "globals": {
-    "angular": true
+    "describe": true,
+    "it": true
   },
   "rules": {
     "camelcase": "error",
