@@ -26,6 +26,7 @@
   },
   "scripts": {
     "test": "istanbul cover _mocha",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
     "start": "node ./bin/www"
   },
   "repository": {
