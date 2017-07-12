@@ -6,8 +6,10 @@ node_js:
 
 before_install:
   - mysql -e 'CREATE DATABASE honeymorning'
+  - mysql -e 'USE honeymorning'
   - mysql -e 'CREATE TABLE blog'
   - mysql -e 'CREATE TABLE movie'
+  - redis-server
 
 script: npm test
 
