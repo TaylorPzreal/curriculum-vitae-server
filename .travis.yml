@@ -5,7 +5,6 @@ node_js:
  - '8.1'
 
 before_install:
-  - redis-server
   - mysql -u root --password='' < config/travis.sql
 
 script: npm test
