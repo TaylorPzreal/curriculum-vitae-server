@@ -10,4 +10,5 @@
 - Crawler: Superagent & Cheerio
 - HTTPS Certification: Self auto generaged || Let's Encrypt
 - Travis & Coveralls
-
+- Redis Session
+- supertest make test
