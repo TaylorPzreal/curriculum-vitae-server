@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const blogDao = require('./.dao');
+const blogDao = require('./dao');
 
 router.get('/queryByTitleId', (req, res, next) => {
   blogDao.queryByTitleId(req, res, next);  
