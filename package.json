@@ -1,6 +1,6 @@
 {
   "name": "curriculum-vitae-server",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Express + MySQL",
   "main": "app.js",
   "dependencies": {
