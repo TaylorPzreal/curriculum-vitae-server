@@ -14,6 +14,7 @@ const users = require('./routes/users');
 const crawer = require('./routes/crawler');
 const blog = require('./routes/blog');
 const movie = require('./routes/movie');
+const account = require('./routes/account');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/users', users);
 app.use('/crawler', crawer);
 app.use('/blog', blog);
 app.use('/movie', movie);
+app.use('/account', account);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
