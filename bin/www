@@ -8,7 +8,7 @@ const debug = require('debug')('curriculum-vitae-server:server');
 const fs = require('fs');
 const path = require('path');
 
-const http = require('http');
+// const http = require('http');
 const https = require('https');
 
 // 根据项目的路径导入生成的证书文件  
@@ -23,7 +23,7 @@ const credentials = {
  * Get port from environment and store in Express.
  */
 
-// const httpPort = normalizePort(process.env.PORT || '3000'); // 443
+// const httpPort = normalizePort(process.env.PORT || '3000'); 
 const httpsPort = normalizePort(process.env.PORT || '3000'); // 443
 
 app.set('port', httpsPort);
@@ -32,7 +32,7 @@ app.set('port', httpsPort);
  * Create HTTP server.
  */
 
-// const httpServer = http.createServer(app);
+// const httpServer = https.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
 /**
