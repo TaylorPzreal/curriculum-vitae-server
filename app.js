@@ -9,13 +9,6 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const index = require('./routes/index');
-const users = require('./routes/users');
-const crawer = require('./routes/crawler');
-const blog = require('./routes/blog');
-const movie = require('./routes/movie');
-const account = require('./routes/account');
-
 const app = express();
 
 // 创建Redis客户端
@@ -33,10 +26,6 @@ app.use(expressSession({
   saveUninitialized: false
 }));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -44,9 +33,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 支持跨域请求
+// ============ 支持跨域请求 =============//
 app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
@@ -58,6 +48,15 @@ app.all('*', (req, res, next) => {
     next();
   }
 });
+// ============ 跨域 End ===============//
+
+// ============ Route Start ==========//
+const index = require('./routes/index');
+const users = require('./routes/users');
+const crawer = require('./routes/crawler');
+const blog = require('./routes/blog');
+const movie = require('./routes/movie');
+const account = require('./routes/account');
 
 app.use('/', index);
 app.use('/users', users);
@@ -65,6 +64,7 @@ app.use('/crawler', crawer);
 app.use('/blog', blog);
 app.use('/movie', movie);
 app.use('/account', account);
+// ============= Route End ========//
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -87,7 +87,7 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.json('error');
+  res.json({error: err});
 
 });
 

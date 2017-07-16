@@ -14,3 +14,7 @@
 - Redis Session
 - supertest make test
 - Github OAuth2.0 Access
+
+## 说明
+- app文件夹存放前端项目
+- 其它所有文件存放后端API接口服务
