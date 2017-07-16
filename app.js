@@ -2,7 +2,6 @@ const express = require('express');
 const expressSession = require('express-session');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(expressSession);
-const passport = require('passport');
 
 const path = require('path');
 // const favicon = require('serve-favicon');
@@ -43,25 +42,22 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 跨域支持
 // 支持跨域请求
-// app.all('*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
-//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-//   // res.header("X-Powered-By", ' 3.2.1')
-//   if (req.method === 'OPTIONS') {
-//     res.send(200); /* 让options请求快速返回*/
-//   } else { 
-//     next();
-//   }
-// });
-
-// app.use(cors());
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  // res.header("X-Powered-By", ' 3.2.1')
+  if (req.method === 'OPTIONS') {
+    res.send(200); /* 让options请求快速返回*/
+  } else { 
+    next();
+  }
+});
 
 app.use('/', index);
 app.use('/users', users);

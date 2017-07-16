@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const OAuthConfig = require('../../config/OAuthConfig');
 const https = require('https');
-// const dao = require();
-const GithubStrategy = require('passport-github').Strategy;
+const request = require('request');
 
 router.get('/loginWithGithub', (req, res, next) => {
   const nowdate = (new Date()).valueOf();
@@ -48,15 +47,28 @@ router.get('/getGithubAccess', (req, response, next) => {
       const token = tokenInfo[1];
 
       const url = `https://api.github.com/user?access_token=${token}&scope=user`;
-      https.get(url, (res) => {
-        res.on('data', (userInfo) => {
-          console.warn(userInfo);
-          process.stdout.write(userInfo);
-          response.json(userInfo);
-        });
-      }).on('error', (err) => {
-        console.error(err);
-      }).end();
+      const options = {
+        url,
+        headers: {
+          'User-Agent': 'HoneyMorning'
+        }
+      };
+
+      function callback (error, res, body) {
+        response.json(JSON.parse(body));
+      }
+
+      request(options, callback);
+
+      // https.get(url, (res) => {
+      //   res.on('data', (userInfo) => {
+      //     console.warn(userInfo);
+      //     process.stdout.write(userInfo);
+      //     response.json(userInfo);
+      //   });
+      // }).on('error', (err) => {
+      //   console.error(err);
+      // }).end();
     });
   }).on('error', (err) => {
     console.error(err);
