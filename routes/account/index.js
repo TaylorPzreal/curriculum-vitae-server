@@ -46,7 +46,7 @@ router.get('/getGithubAccess', (req, response, next) => {
       const tokenInfo = args[0].split('=');
       const token = tokenInfo[1];
 
-      const url = `https://api.github.com/user?access_token=${token}&scope=user`;
+      const url = `https://api.github.com/user?access_token=${token}`;
       const options = {
         url,
         headers: {
@@ -56,19 +56,11 @@ router.get('/getGithubAccess', (req, response, next) => {
 
       function callback (error, res, body) {
         response.json(JSON.parse(body));
+        console.warn(body);
+        // response.redirect('/');
       }
 
       request(options, callback);
-
-      // https.get(url, (res) => {
-      //   res.on('data', (userInfo) => {
-      //     console.warn(userInfo);
-      //     process.stdout.write(userInfo);
-      //     response.json(userInfo);
-      //   });
-      // }).on('error', (err) => {
-      //   console.error(err);
-      // }).end();
     });
   }).on('error', (err) => {
     console.error(err);
