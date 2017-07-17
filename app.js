@@ -8,8 +8,13 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 
 const app = express();
+
+// ---------- GZip Compress all response -------------//
+app.use(compression());
+// ---------- GZip End -------------//
 
 // 创建Redis客户端
 const redisClient = redis.createClient(6379, '127.0.0.1', {
