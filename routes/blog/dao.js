@@ -58,5 +58,48 @@ module.exports = {
         connection.release();
       });
     });
+  },
+  queryByPage (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      const param = req.query || req.params;
+
+      connection.query(sql.queryByPage, (param.page - 1) * 10, (error, result) => {
+        if (error) {
+          throw error;
+        }
+
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'Success'
+        };
+
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
+  },
+  queryTop10Hot (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(sql.queryTop10Hot, (error, result) => {
+        if (error) {
+          throw error;
+        }
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'Success'
+        };
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
   }
 };
