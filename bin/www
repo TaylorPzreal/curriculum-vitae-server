@@ -5,43 +5,43 @@
  */
 const app = require('../app');
 const debug = require('debug')('curriculum-vitae-server:server');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-// const http = require('http');
-const https = require('https');
+const http = require('http');
+// const https = require('https');
 
 // 根据项目的路径导入生成的证书文件  
-const privateKey = fs.readFileSync(path.join(__dirname, '../certificate/private.pem'), 'utf8');
-const certificate = fs.readFileSync(path.join(__dirname, '../certificate/file.crt'), 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate
-};
+// const privateKey = fs.readFileSync(path.join(__dirname, '../certificate/private.pem'), 'utf8');
+// const certificate = fs.readFileSync(path.join(__dirname, '../certificate/file.crt'), 'utf8');
+// const credentials = {
+//   key: privateKey,
+//   cert: certificate
+// };
 
 /**
  * Get port from environment and store in Express.
  */
 
-// const httpPort = normalizePort(process.env.PORT || '3000'); 
-const httpsPort = normalizePort(process.env.PORT || '3000'); // 443
+const httpPort = normalizePort(process.env.PORT || '3000'); 
+// const httpsPort = normalizePort(process.env.PORT || '3000'); // 443
 
-app.set('port', httpsPort);
+app.set('port', httpPort);
 
 /**
  * Create HTTP server.
  */
 
-// const httpServer = https.createServer(app);
-const httpsServer = https.createServer(credentials, app);
+const httpServer = http.createServer(app);
+// const httpsServer = https.createServer(credentials, app);
 
 /**
  * Listen on provided port, on all network interfaces.
  * 启动服务
  */
-httpsServer.listen(httpsPort);
-httpsServer.on('error', onError);
-httpsServer.on('listening', onListening);
+httpServer.listen(httpPort);
+httpServer.on('error', onError);
+httpServer.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -73,8 +73,8 @@ function onError (error) {
   }
 
   const bind = typeof httpPort === 'string' ?
-    `Pipe ${httpsPort}` :
-    `Port ${httpsPort}`;
+    `Pipe ${httpPort}` :
+    `Port ${httpPort}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -96,7 +96,7 @@ function onError (error) {
  */
 
 function onListening () {
-  const addr = httpsServer.address();
+  const addr = httpServer.address();
   const bind = typeof addr === 'string' ?
     `pipe ${addr}` :
     `port ${addr.port}`;
