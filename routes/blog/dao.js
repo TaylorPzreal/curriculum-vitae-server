@@ -64,9 +64,9 @@ module.exports = {
       if (err) {
         throw err;
       }
-      const param = req.query || req.params;
+      const page = req.params.page || 1;
 
-      connection.query(sql.queryByPage, (param.page - 1) * 10, (error, result) => {
+      connection.query(sql.queryByPage, (page - 1) * 10, (error, result) => {
         if (error) {
           throw error;
         }

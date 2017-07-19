@@ -41,18 +41,19 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 由Nginx来处理了，这里不需要用到了
 // ============ 支持跨域请求 =============//
-app.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-  // res.header("X-Powered-By", ' 3.2.1')
-  if (req.method === 'OPTIONS') {
-    res.send(200); /* 让options请求快速返回*/
-  } else { 
-    next();
-  }
-});
+// app.all('*', (req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+//   // res.header("X-Powered-By", ' 3.2.1')
+//   if (req.method === 'OPTIONS') {
+//     res.send(200); /* 让options请求快速返回*/
+//   } else { 
+//     next();
+//   }
+// });
 // ============ 跨域 End ===============//
 
 // ============ Route Start ==========//
@@ -64,11 +65,11 @@ const movie = require('./routes/movie');
 const account = require('./routes/account');
 
 app.use('/', index);
-app.use('/api/users', users);
-app.use('/api/crawler', crawer);
-app.use('/api/blog', blog);
-app.use('/api/movie', movie);
-app.use('/api/account', account);
+app.use('/users', users);
+app.use('/crawler', crawer);
+app.use('/blog', blog);
+app.use('/movie', movie);
+app.use('/account', account);
 // ============= Route End ========//
 
 // catch 404 and forward to error handler

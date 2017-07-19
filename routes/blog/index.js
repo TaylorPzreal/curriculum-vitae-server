@@ -10,7 +10,7 @@ router.get('/queryAll', (req, res, next) => {
   blogDao.queryAll(req, res, next);
 });
 
-router.get('/queryByPage', (req, res, next) => {
+router.get('/queryByPage/:page', (req, res, next) => {
   blogDao.queryByPage(req, res, next);
 });
 
