@@ -3,7 +3,7 @@
     [![Coverage Status](https://coveralls.io/repos/github/TaylorPzreal/curriculum-vitae-server/badge.svg)](https://coveralls.io/github/TaylorPzreal/curriculum-vitae-server)
     [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-## 技术栈
+## 一、技术栈
 - Language: NodeJS
 - Framework: Express
 - Database: MySQL
@@ -16,12 +16,11 @@
 - Github OAuth2.0 Access
 - Nginx 启动web服务器，反向代理PM2启动的应用服务器
 
-## 说明
-- app文件夹存放前端项目
-- 其它所有文件存放后端API接口服务
+## 二、使用说明
 
-## 学习之路
-### 安装MySQL
+
+## 三、实践之路
+### 1. Install MySQL
 
 - MySQL Download Url: [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/)
 - MySQL GUI Workbench [https://dev.mysql.com/downloads/workbench/](https://dev.mysql.com/downloads/workbench/)
@@ -44,7 +43,7 @@
 
     mysql -u root -p newdatabase < /path/to/newdatabase.sql
     ```
-### Install Nginx
+### 2. Install Nginx
 
 - [官网Installition](https://www.nginx.com/resources/wiki/start/topics/tutorials/install/)
 
@@ -73,21 +72,21 @@
     ```
 - Nginx Configuration [nginx.conf](./docs/nginx.conf) for CORS & Proxy Nodejs Server
 - ***whereis nginx.conf*** 可进行查找文件路径
-### [Install Redis](./docs/redis.md)
+### 3. Install Redis [Redis Installition](./docs/redis.md)
 
-### PM2 Process Manager [keymetrics](https://keymetrics.io/)
+### 4. PM2 Process Manager [keymetrics](https://keymetrics.io/)
     - 注册一个帐号，用github注册即可
     - 命令行里面输入： ***pm2 interact start*** 
     - 其它命令 pm2 interact status pm2 interact stop
 
-## 待补充文档
-### 测试（Unit Testing & E2E Testing）
+## 四、待补充文档
+### 1. 测试（Unit Testing & E2E Testing）
 
-### 爬虫（Superagent & cheerio）
+### 2. 爬虫（Superagent & cheerio）
 
-### API文档: Swagger
+### 3. API文档: Swagger
 
-### 免费配置HTTPS [Let's Encrypt](https://letsencrypt.org/)
+### 4. 免费配置HTTPS [Let's Encrypt](https://letsencrypt.org/)
 ubuntu 16.04 nginx 配置[https://certbot.eff.org/#ubuntuxenial-nginx](https://certbot.eff.org/#ubuntuxenial-nginx)
 
 > 按着下面的步骤，会自动配置好Nginx的nginx.conf的文件，自己做一下修改即可
