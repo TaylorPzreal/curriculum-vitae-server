@@ -37,7 +37,8 @@
   "scripts": {
     "test": "istanbul cover _mocha",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "server": "pm2 start ./bin/www --watch"
   },
   "repository": {
     "type": "git",
