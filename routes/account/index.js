@@ -7,16 +7,27 @@ const dao = require('./dao');
 
 const passport = require('passport');
 
-router.get('/login', (req, res) => {
-  res.json('Login');
-});
+// router.get('/login', (req, res) => {
+//   res.json('Login');
+// });
 router.get('/login/github', passport.authenticate('github'));
 router.get('/login/github/return', passport.authenticate('github', {
-  failureRedirect: '/account/login'
+  failureRedirect: '/'
 }), (req, res) => {
-  console.warn('github login success', res.req.user);
-  // res.redirect('/');
-  res.json(res.req.user._json);
+  const userInfo = res.req.user._json;
+
+  dao.queryUserById(userInfo.id).then((status) => {
+    if (status) {
+      // 不再更新用户信息，更新需要在本网站进行。
+      // dao.updateUserById(userInfo);
+    } else {
+      dao.saveUser(userInfo);
+    }
+
+    res.redirect('/');
+  }).catch((err) => {
+    throw err;
+  });
 });
 router.get('/profile', require('connect-ensure-login').ensureLoggedIn(), (req, res) => {
   res.json('profile', {
@@ -98,6 +109,14 @@ router.get('/getGithubAccess', (req, response, next) => {
   }).on('error', (err) => {
     console.error(err);
   }).end();
+});
+
+router.get('/logout', (req, res, next) => {
+  req.session.destroy(() => {
+    res.clearCookie('user', {});
+    res.cookie('isLogin', 'false');
+    res.redirect('/');
+  });
 });
 
 module.exports = router;

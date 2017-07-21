@@ -1,14 +1,14 @@
 const express = require('express');
-const expressSession = require('express-session');
-const redis = require('redis');
-const RedisStore = require('connect-redis')(expressSession);
 
-const path = require('path');
-// const favicon = require('serve-favicon');
+// =============Redis===========//
+const redis = require('redis');
+const expressSession = require('express-session');
+const RedisStore = require('connect-redis')(expressSession);
+// =============Redis ==========//
+
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const compression = require('compression');
 
 // Login with GitHub
 const passport = require('passport');
@@ -31,7 +31,7 @@ passport.deserializeUser((obj, cb) => {
 const app = express();
 
 // ---------- GZip Compress all response -------------//
-app.use(compression());
+app.use(require('compression')());
 // ---------- GZip End -------------//
 
 // 创建Redis客户端
@@ -49,8 +49,6 @@ app.use(expressSession({
   saveUninitialized: false
 }));
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -61,21 +59,18 @@ app.use(bodyParser.urlencoded({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// 由Nginx来处理了，这里不需要用到了
 // ============ 支持跨域请求 =============//
-// app.all('*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
-//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-//   // res.header("X-Powered-By", ' 3.2.1')
-//   if (req.method === 'OPTIONS') {
-//     res.send(200); /* 让options请求快速返回*/
-//   } else { 
-//     next();
-//   }
-// });
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  // res.header("X-Powered-By", ' 3.2.1')
+  if (req.method === 'OPTIONS') {
+    res.send(200); /* 让options请求快速返回*/
+  } else { 
+    next();
+  }
+});
 // ============ 跨域 End ===============//
 
 // ============ Route Start ==========//
