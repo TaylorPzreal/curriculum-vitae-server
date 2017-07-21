@@ -4,6 +4,20 @@ const OAuthConfig = require('../../config/OAuthConfig');
 const https = require('https');
 const request = require('request');
 
+const passport = require('passport');
+
+router.get('/login', (req, res) => {
+  res.json('Login');
+});
+router.get('/login/github', passport.authenticate('github'));
+router.get('/login/github/return', passport.authenticate('github', {failureRedirect: '/login'}), (req, res) => {
+  console.warn('github login success');
+  res.redirect('/login');
+});
+router.get('/profile', require('connect-ensure-login').ensureLoggedIn(), (req, res) => {
+  res.json('profile', {user: req.user});
+});
+
 router.get('/loginWithGithub', (req, res, next) => {
   const nowdate = (new Date()).valueOf();
 
@@ -11,7 +25,7 @@ router.get('/loginWithGithub', (req, res, next) => {
   path += `?client_id=${OAuthConfig.ClientID}`; 
   path += `&scope=${OAuthConfig.Scope}`;
   path += `&state=${nowdate}`;
-  path += '&redirect_uri=https://localhost:3000/account/getGithubAccess';
+  path += '&redirect_uri=https://www.honeymorning.com/api/account/getGithubAccess';
 
   res.redirect(path);
 });

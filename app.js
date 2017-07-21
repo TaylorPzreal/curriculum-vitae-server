@@ -10,6 +10,24 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 
+// Login with GitHub
+const passport = require('passport');
+const GithubStrategy = require('passport-github').Strategy;
+const OAuthConfig = require('./config/OAuthConfig');
+passport.use(new GithubStrategy({
+  clientID: OAuthConfig.ClientID,
+  clientSecret: OAuthConfig.ClientSecret,
+  callbackURL: OAuthConfig.CallbackURL
+}, (accessToken, refreshToken, profile, cb) => {
+  return cb(null, profile);
+}));
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+passport.deserializeUser((obj, cb) => {
+  cb(null, obj);
+});
+
 const app = express();
 
 // ---------- GZip Compress all response -------------//
@@ -39,7 +57,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// use passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // 由Nginx来处理了，这里不需要用到了
 // ============ 支持跨域请求 =============//

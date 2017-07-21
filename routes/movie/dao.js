@@ -33,5 +33,23 @@ module.exports = {
         connection.release();
       });
     });
+  },
+  queryTopMovie (req, res) {
+    pool.getConnection((err, connection) => {
+      connection.query(sql.queryTopMovie, (error, result) => {
+        if (error) {
+          throw error;
+        }
+
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'Success'
+        };
+
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
   }
 };

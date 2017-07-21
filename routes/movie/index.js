@@ -6,4 +6,8 @@ router.get('/queryByPage', (req, res, next) => {
   dao.queryByPage(req, res, next);
 });
 
+router.get('/queryTopMovie', (req, res, next) => {
+  dao.queryTopMovie(req, res, next);
+});
+
 module.exports = router;
