@@ -3,6 +3,7 @@ const router = express.Router();
 const OAuthConfig = require('../../config/OAuthConfig');
 const https = require('https');
 const request = require('request');
+const dao = require('./dao');
 
 const passport = require('passport');
 
@@ -10,38 +11,45 @@ router.get('/login', (req, res) => {
   res.json('Login');
 });
 router.get('/login/github', passport.authenticate('github'));
-router.get('/login/github/return', passport.authenticate('github', {failureRedirect: '/login'}), (req, res) => {
-  console.warn('github login success');
-  res.redirect('/login');
+router.get('/login/github/return', passport.authenticate('github', {
+  failureRedirect: '/account/login'
+}), (req, res) => {
+  console.warn('github login success', res.req.user);
+  // res.redirect('/');
+  res.json(res.req.user._json);
 });
 router.get('/profile', require('connect-ensure-login').ensureLoggedIn(), (req, res) => {
-  res.json('profile', {user: req.user});
+  res.json('profile', {
+    user: req.user
+  });
 });
 
-router.get('/loginWithGithub', (req, res, next) => {
-  const nowdate = (new Date()).valueOf();
+// 前端页面直接发起重定向请求
+// router.get('/loginWithGithub', (req, res, next) => {
+//   const nowdate = (new Date()).valueOf();
 
-  let path = 'https://github.com/login/oauth/authorize';
-  path += `?client_id=${OAuthConfig.ClientID}`; 
-  path += `&scope=${OAuthConfig.Scope}`;
-  path += `&state=${nowdate}`;
-  path += '&redirect_uri=https://www.honeymorning.com/api/account/getGithubAccess';
+//   let path = 'https://github.com/login/oauth/authorize';
+//   path += `?client_id=${OAuthConfig.ClientID}`; 
+//   path += `&scope=${OAuthConfig.Scope}`;
+//   path += `&state=${nowdate}`;
+//   path += `&redirect_uri=${OAuthConfig.CallbackURL}`;
 
-  res.redirect(path);
-});
+//   res.redirect(path);
+// });
 
 router.get('/getGithubAccess', (req, response, next) => {
 
   const code = req.query.code;
-  const state = req.query.state;
+  // const state = req.query.state;
   const headers = req.headers;
+  // console.warn(code, req.query);
   headers.host = 'github.com';
   let path = '/login/oauth/access_token';
   path += `?client_id=${OAuthConfig.ClientID}`;
   path += `&client_secret=${OAuthConfig.ClientSecret}`;
   path += `&code=${code}`;
 
-  console.warn(path, 'path');
+  // console.warn(path, 'path');
 
   const opts = {
     hostname: headers.host,
@@ -69,9 +77,20 @@ router.get('/getGithubAccess', (req, response, next) => {
       };
 
       function callback (error, res, body) {
-        response.json(JSON.parse(body));
-        console.warn(body);
-        // response.redirect('/');
+        const userInfo = JSON.parse(body);
+
+        dao.queryUserById(userInfo.id).then((status) => {
+          if (status) {
+            // 不再更新用户信息，更新需要在本网站进行。
+            // dao.updateUserById(userInfo);
+          } else {
+            dao.saveUser(userInfo);
+          }
+
+          response.redirect('/');
+        }).catch((err) => {
+          throw err;
+        });
       }
 
       request(options, callback);
