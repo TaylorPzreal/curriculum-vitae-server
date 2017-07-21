@@ -32,7 +32,7 @@ module.exports = {
       });
     });
   },
-  queryUserById (id) {
+  queryUserById (uid) {
 
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
@@ -40,14 +40,14 @@ module.exports = {
           reject(err);
         }
 
-        connection.query(sql.queryUserById, id, (error, result) => {
+        connection.query(sql.queryUserById, uid, (error, result) => {
           if (error) {
             throw error;
           }
 
           connection.release();
 
-          if (result.id === id) { // exist
+          if (result.uid === uid) { // exist
             resolve(1);
           } else { // unexist
             resolve(0);
@@ -62,7 +62,7 @@ module.exports = {
         throw err;
       }
 
-      connection.query(sql.updateUserById, [user.name, user.email, user.location, user.age, user.company, user.avatar_url, user.bio, user.followers, user.following, user.id], (error, result) => {
+      connection.query(sql.updateUserById, [user.name, user.email, user.location, user.age, user.company, user.avatar_url, user.bio, user.followers, user.following, user.uid], (error, result) => {
         if (error) {
           throw error;
         }
