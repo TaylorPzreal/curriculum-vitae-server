@@ -25,7 +25,7 @@ router.get('/login/github/return', passport.authenticate('github', {
     }
 
     req.session.user = user;
-    console.warn(user);
+    res.cookie('isLogin', 'true');
     res.redirect('/');
   }).catch((err) => {
     throw err;
@@ -127,7 +127,7 @@ router.get('/getGithubAccess', (req, response, next) => {
 router.get('/logout', (req, res, next) => {
   req.session.destroy(() => {
     // req.session.user = null;
-    // res.clearCookie('user', {});
+    res.clearCookie('user', {});
     res.cookie('isLogin', 'false');
     res.json({
       code: 2000,
