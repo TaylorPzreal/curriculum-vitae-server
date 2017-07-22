@@ -16,23 +16,36 @@ router.get('/login/github/return', passport.authenticate('github', {
 }), (req, res) => {
   const userInfo = res.req.user._json;
 
-  dao.queryUserById(userInfo.id).then((status) => {
-    if (status) {
+  dao.queryUserByUid(userInfo.id).then((user) => {
+    if (user) {
       // 不再更新用户信息，更新需要在本网站进行。
       // dao.updateUserById(userInfo);
     } else {
       dao.saveUser(userInfo);
     }
 
+    req.session.user = user;
+    console.warn(user);
     res.redirect('/');
   }).catch((err) => {
     throw err;
   });
 });
-router.get('/profile', require('connect-ensure-login').ensureLoggedIn(), (req, res) => {
-  res.json('profile', {
-    user: req.user
-  });
+router.get('/profile', (req, res) => {
+  console.warn(req.session);
+  if (req && req.session && req.session.user) {
+    res.json({
+      code: 2000,
+      data: req.session.user,
+      msg: 'success'
+    });
+  } else {
+    res.json({
+      code: 4000,
+      data: null,
+      msg: 'not login'
+    });
+  }
 });
 
 // 前端页面直接发起重定向请求
@@ -90,7 +103,7 @@ router.get('/getGithubAccess', (req, response, next) => {
       function callback (error, res, body) {
         const userInfo = JSON.parse(body);
 
-        dao.queryUserById(userInfo.id).then((status) => {
+        dao.queryUserByUid(userInfo.id).then((status) => {
           if (status) {
             // 不再更新用户信息，更新需要在本网站进行。
             // dao.updateUserById(userInfo);
@@ -113,9 +126,14 @@ router.get('/getGithubAccess', (req, response, next) => {
 
 router.get('/logout', (req, res, next) => {
   req.session.destroy(() => {
-    res.clearCookie('user', {});
+    // req.session.user = null;
+    // res.clearCookie('user', {});
     res.cookie('isLogin', 'false');
-    res.redirect('/');
+    res.json({
+      code: 2000,
+      data: null,
+      msg: 'log out success'
+    });
   });
 });
 

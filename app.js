@@ -41,14 +41,17 @@ const redisClient = redis.createClient(6379, '127.0.0.1', {
 // 设置Express的session存储中间件
 app.use(cookieParser());
 app.use(expressSession({
+  name: 'sid',
   store: new RedisStore({
     client: redisClient
   }),
   secret: '521morning',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1 * 24 * 60 * 60 * 1000
+  }
 }));
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -72,6 +75,18 @@ app.all('*', (req, res, next) => {
   }
 });
 // ============ 跨域 End ===============//
+
+// 所有请求都验证用户是否已经登录
+// app.use((req, res, next) => {
+//   if (!req.session.user) { // 未登录，如果不是登录注册找回密码页面，则跳转到登录页面
+//     // res.redirect('/account/login');
+
+//     next();
+//   } else { // 已登录
+//     next();
+//   }
+//   console.warn(req.session);
+// });
 
 // ============ Route Start ==========//
 const index = require('./routes/index');

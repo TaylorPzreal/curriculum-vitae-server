@@ -32,7 +32,7 @@ module.exports = {
       });
     });
   },
-  queryUserById (uid) {
+  queryUserByUid (uid) {
 
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
@@ -40,15 +40,17 @@ module.exports = {
           reject(err);
         }
 
-        connection.query(sql.queryUserById, uid, (error, result) => {
+        connection.query(sql.queryUserByUid, uid, (error, result) => {
           if (error) {
             throw error;
           }
 
           connection.release();
 
+          result = result[0];
+
           if (result.uid === uid) { // exist
-            resolve(1);
+            resolve(result);
           } else { // unexist
             resolve(0);
           }
