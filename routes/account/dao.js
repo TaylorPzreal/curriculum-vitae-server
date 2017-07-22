@@ -49,7 +49,7 @@ module.exports = {
 
           result = result[0];
 
-          if (result.uid === uid) { // exist
+          if (result && result.uid && result.uid === uid) { // exist
             resolve(result);
           } else { // unexist
             resolve(0);
