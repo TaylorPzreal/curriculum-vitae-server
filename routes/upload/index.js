@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
   },
   filename (req, file, cb) {
     const post = file.originalname.match(/\.(png|jpeg|gif|bmp|tiff|svg|jpg)$/g)[0];
-    cb(null, `${file.fieldname}-${Date.now()}${post}`);
+    cb(null, `honeymorning-${Date.now()}${post}`);
   }
 });
 const upload = multer({
