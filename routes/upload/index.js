@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+// 上传图片路径，存储到前端项目根目录下面的相关文件夹，如果不存在需要创建，否则报错。
 const uploadPath = '../curriculum-vitae/upload/images/';
 const multer = require('multer');
 const storage = multer.diskStorage({
