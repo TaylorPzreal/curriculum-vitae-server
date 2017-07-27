@@ -63,17 +63,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ============ 支持跨域请求 =============//
-// app.all('*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
-//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-//   // res.header("X-Powered-By", ' 3.2.1')
-//   if (req.method === 'OPTIONS') {
-//     res.send(200); /* 让options请求快速返回*/
-//   } else { 
-//     next();
-//   }
-// });
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  // res.header("X-Powered-By", ' 3.2.1')
+  if (req.method === 'OPTIONS') {
+    res.send(200); /* 让options请求快速返回*/
+  } else { 
+    next();
+  }
+});
 // ============ 跨域 End ===============//
 
 // 所有请求都验证用户是否已经登录
@@ -89,19 +89,13 @@ app.use(passport.session());
 // });
 
 // ============ Route Start ==========//
-const index = require('./routes/index');
-const users = require('./routes/users');
-const crawer = require('./routes/crawler');
-const blog = require('./routes/blog');
-const movie = require('./routes/movie');
-const account = require('./routes/account');
-
-app.use('/', index);
-app.use('/users', users);
-app.use('/crawler', crawer);
-app.use('/blog', blog);
-app.use('/movie', movie);
-app.use('/account', account);
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+app.use('/crawler', require('./routes/crawler'));
+app.use('/blog', require('./routes/blog'));
+app.use('/movie', require('./routes/movie'));
+app.use('/account', require('./routes/account'));
+app.use('/upload', require('./routes/upload'));
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
