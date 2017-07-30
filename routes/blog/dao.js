@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mysql = require('mysql');
 const conf = require('../../config/db');
 const sql = require('./sql');
@@ -22,14 +23,14 @@ module.exports = {
         throw err;
       }
 
-      connection.query(sql.queryByTitleId, req.query.titleId, (error, result) => {
+      connection.query(sql.queryByTitleId, req.params.titleId, (error, result) => {
         if (error) {
           throw error;
         }
 
         result = {
           code: 2000,
-          data: result,
+          data: result[0],
           msg: 'Success'
         };
 
@@ -96,6 +97,53 @@ module.exports = {
           code: 2000,
           data: result,
           msg: 'Success'
+        };
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
+  },
+  querySelf (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      const page = req.params.page || 1;
+      connection.query(sql.querySelf, page, (error, result) => {
+        if (error) {
+          throw error;
+        }
+
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'query success'
+        };
+
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
+  },
+  saveBlog (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      const p = req.body;
+      const date = `hm${(new Date()).valueOf()}`;
+      const md5 = crypto.createHash('md5');
+      md5.update(date);
+      p.titleId = md5.digest('hex');
+
+      connection.query(sql.insert, [p.titleId, p.title, p.author, p.authorId, p.logo, p.detail, p.tag, p.desc, p.coverImage], (error, result) => {
+        if (error) {
+          throw error;
+        }
+        result = {
+          code: 2000,
+          data: null,
+          msg: 'Insert Blog Success'
         };
         responseJSON(res, result);
         connection.release();
