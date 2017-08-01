@@ -96,6 +96,7 @@ app.use('/blog', require('./routes/blog'));
 app.use('/movie', require('./routes/movie'));
 app.use('/account', require('./routes/account'));
 app.use('/upload', require('./routes/upload'));
+app.use('/mail', require('./routes/mail'));
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
