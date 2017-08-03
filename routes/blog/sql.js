@@ -8,8 +8,8 @@ const sql = {
   queryByPage: 'SELECT id, title, author, visites FROM blog LIMIT 15 offset ?',
   queryTop10Hot: 'select id, title, author, visites from blog order by visites desc LIMIT 10',
   querySelf: 'select titleId, title, author, logo, tag, ctime, summary, coverImage from blog where tag <> ""',
-  tagStatistic: 'select tag, count(*) from blog where tag <> "" group by tag',
-  monthBlogs: 'select year(ctime) as year, month(ctime) as month, count(*) as count from blog where tag <> "" group by year(ctime) desc, month(ctime)'
+  tagStatistic: 'select tag as name, count(*) as value from blog where tag <> "" group by tag',
+  monthBlogs: 'select concat(year(ctime), "-", month(ctime)) as name, count(*) as value from blog where tag <> "" group by concat(year(ctime), "-", month(ctime))'
 };
 
 module.exports = sql;
