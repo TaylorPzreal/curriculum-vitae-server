@@ -159,7 +159,7 @@ module.exports = {
       }
       const p = req.body;
 
-      connection.query(sql.update, [p.title, p.detail, p.desc, p.tag, p.id], (error, result) => {
+      connection.query(sql.update, [p.title, p.detail, p.desc, p.tag, p.coverImage, p.id], (error, result) => {
         if (error) {
           throw error;
         }
@@ -185,7 +185,7 @@ module.exports = {
         }
         result = {
           code: 2000,
-          data: result[0],
+          data: result,
           msg: 'Success'
         };
         responseJSON(res, result);
@@ -199,14 +199,14 @@ module.exports = {
         throw err;
       }
 
-      connection.query(sql.tagStatistic, (error, result) => {
+      connection.query(sql.monthBlogs, (error, result) => {
         if (error) {
           throw error;
         }
 
         result = {
           code: 2000,
-          data: result[0],
+          data: result,
           msg: 'Success'
         };
 
