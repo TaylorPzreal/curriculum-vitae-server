@@ -28,6 +28,8 @@ module.exports = {
           throw error;
         }
 
+        result[0].desc = result[0].summary; // transfer
+
         result = {
           code: 2000,
           data: result[0],
@@ -183,7 +185,7 @@ module.exports = {
         }
         result = {
           code: 2000,
-          data: result,
+          data: result[0],
           msg: 'Success'
         };
         responseJSON(res, result);
@@ -204,7 +206,7 @@ module.exports = {
 
         result = {
           code: 2000,
-          data: result,
+          data: result[0],
           msg: 'Success'
         };
 
