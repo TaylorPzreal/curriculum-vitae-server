@@ -19,11 +19,30 @@ router.get('/queryTop10Hot', (req, res, next) => {
 });
 
 router.post('/edit', (req, res, next) => {
-  blogDao.saveBlog(req, res, next);
+  const p = req.body;
+  if (p.id) {
+    blogDao.updateBlog(req, res, next);
+  } else {
+    blogDao.saveBlog(req, res, next);
+  }
 });
 
 router.get('/querySelf/:page', (req, res, next) => {
   blogDao.querySelf(req, res, next);
+});
+
+/**
+ * 标签统计分析
+ */
+router.get('/tagStatistic', (req, res, next) => {
+  blogDao.tagStatistic(req, res, next);
+});
+
+/**
+ * 月blog数统计分析
+ */
+router.get('/monthBlogs', (req, res, next) => {
+  blogDao.monthBlogs(req, res, next);
 });
 
 module.exports = router;

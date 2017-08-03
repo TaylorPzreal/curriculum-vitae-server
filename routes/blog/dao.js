@@ -149,5 +149,68 @@ module.exports = {
         connection.release();
       });
     });
+  },
+  updateBlog (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+      const p = req.body;
+
+      connection.query(sql.update, [p.title, p.detail, p.desc, p.tag, p.id], (error, result) => {
+        if (error) {
+          throw error;
+        }
+        result = {
+          code: 2001,
+          data: null,
+          msg: 'Update Blog Success'
+        };
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
+  },
+  tagStatistic (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(sql.tagStatistic, (error, result) => {
+        if (error) {
+          throw error;
+        }
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'Success'
+        };
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
+  },
+  monthBlogs (req, res) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(sql.tagStatistic, (error, result) => {
+        if (error) {
+          throw error;
+        }
+
+        result = {
+          code: 2000,
+          data: result,
+          msg: 'Success'
+        };
+
+        responseJSON(res, result);
+        connection.release();
+      });
+    });
   }
 };
