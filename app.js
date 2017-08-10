@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 
 // =============Redis===========//
 const redis = require('redis');
@@ -29,6 +30,7 @@ passport.deserializeUser((obj, cb) => {
 });
 
 const app = express();
+app.use(helmet()); // secure my express apps by setting various HTTP headers.
 
 // ---------- GZip Compress all response -------------//
 app.use(require('compression')());

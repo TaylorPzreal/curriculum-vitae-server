@@ -15,19 +15,21 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "express-session": "^1.15.3",
+    "helmet": "^3.8.1",
     "iconv-lite": "^0.4.18",
     "morgan": "^1.8.2",
     "multer": "^1.3.0",
-    "mysql": "^2.13.0",
+    "mysql": "2.14.0",
     "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
     "redis": "^2.7.1",
     "request": "^2.81.0",
     "serve-favicon": "~2.4.2",
-    "socket.io": "^2.0.3",
+    "socket.io": "2.0.3",
     "superagent": "^3.5.2",
-    "superagent-charset": "^1.2.0"
+    "superagent-charset": "^1.2.0",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "coveralls": "^2.13.1",
@@ -42,8 +44,11 @@
   "scripts": {
     "test": "istanbul cover _mocha",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "start": "nodemon ./bin/www",
-    "server": "pm2 start ./bin/www --watch"
+    "start": "NODE_ENV=development DEBUG=curriculum-vitae-server nodemon ./bin/www",
+    "server": "NODE_ENV=production pm2 start ./bin/www --watch",
+    "secure:nsp": "nsp check",
+    "secure:snyk:wizard": "snyk wizard",
+    "secure:snyk": "snyk test"
   },
   "repository": {
     "type": "git",

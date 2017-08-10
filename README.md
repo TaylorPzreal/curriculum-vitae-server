@@ -2,6 +2,7 @@
 ![持续集成测试](https://travis-ci.org/TaylorPzreal/curriculum-vitae-server.svg?branch=master)
     [![Coverage Status](https://coveralls.io/repos/github/TaylorPzreal/curriculum-vitae-server/badge.svg)](https://coveralls.io/github/TaylorPzreal/curriculum-vitae-server)
     [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+    [![Known Vulnerabilities](https://snyk.io/test/github/taylorpzreal/curriculum-vitae-server/badge.svg)](https://snyk.io/test/github/taylorpzreal/curriculum-vitae-server)
 
 ## 一、技术栈
 - Language: NodeJS
