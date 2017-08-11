@@ -32,6 +32,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "chai": "^4.1.1",
     "coveralls": "^2.13.1",
     "eslint": "^4.1.1",
     "istanbul": "^0.4.5",
@@ -44,7 +45,7 @@
   "scripts": {
     "test": "istanbul cover _mocha",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "start": "NODE_ENV=development DEBUG=curriculum-vitae-server nodemon ./bin/www",
+    "start": "NODE_ENV=development DEBUG=curriculum-vitae-server nodemon --inspect ./bin/www",
     "server": "NODE_ENV=production pm2 start ./bin/www --watch",
     "secure:nsp": "nsp check",
     "secure:snyk:wizard": "snyk wizard",

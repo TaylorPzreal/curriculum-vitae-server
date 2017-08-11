@@ -1,4 +1,7 @@
-require('should');
+// require('should');
+const chai = require('chai');
+const assert = chai.assert;
+const should = chai.should();
 
 const app = require('../app');
 const supertest = require('supertest');
@@ -18,16 +21,16 @@ describe('测试Blog的相关接口 routes/blog/index.js', () => {
       });
   });
 
-  it('queryByTitleId should return code 2000 when titleId===2', (done) => {
+  // it('queryByTitleId should return code 2000 when titleId===2', (done) => {
 
-    request.get('/blog/queryByTitleId')
-      .query({titleId: 2})
-      .end((err, res) => {
-        if (err) {
-          return done(err);
-        }
-        res.body.code.should.equal(2000);
-        done();
-      });
-  });
+  //   request.get('/blog/queryByTitleId')
+  //     .query({titleId: 2})
+  //     .end((err, res) => {
+  //       if (err) {
+  //         return done(err);
+  //       }
+  //       res.body.code.should.equal(2000);
+  //       done();
+  //     });
+  // });
 });

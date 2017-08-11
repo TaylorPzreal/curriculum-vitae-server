@@ -1,3 +1,4 @@
 /node_modules
 /config/db.js
 /coverage
+yarn-error.log
