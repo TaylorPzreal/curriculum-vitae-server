@@ -1,4 +1,5 @@
 const express = require('express');
+const Geetest = require('gt3-sdk');
 const router = express.Router();
 const OAuthConfig = require('../../config/OAuthConfig');
 const https = require('https');
@@ -6,6 +7,55 @@ const request = require('request');
 const dao = require('./dao');
 
 const passport = require('passport');
+
+const captcha = new Geetest({
+  geetest_id: '1072274d4348139f7f7f5b1f6a4098d2',
+  geetest_key: 'cbfce55ba57c61a9ec11fb38865d6a44'
+});
+
+router.get('/geetest', (req, res) => {
+  captcha.register(null, (error, data) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (!data.success) {
+      req.session.fallback = true;
+      res.send(data);
+    } else {
+      // 正常模式
+      req.session.fallback = false;
+      res.send(data);
+    }
+  });
+});
+
+router.post('/geetestRevalidate', (req, res) => {
+  captcha.validate(req.session.fallback, {
+    geetest_challenge: req.body.geetest_challenge,
+    geetest_validate: req.body.geetest_validate,
+    geetest_seccode: req.body.geetest_seccode
+  }, (err, success) => {
+    if (err) {
+      // 网络错误
+      res.send(err);
+    } else if (!success) {
+      // 二次验证失败
+      res.send({
+        code: 4000,
+        data: 'failed',
+        msg: 'validate failed'
+      });
+    } else {
+      res.send({
+        code: 2000,
+        data: 'success',
+        msg: 'validate success'
+      });
+    }
+  });
+});
 
 // router.get('/login', (req, res) => {
 //   res.json('Login');
