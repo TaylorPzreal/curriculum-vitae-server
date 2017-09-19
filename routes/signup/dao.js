@@ -16,6 +16,7 @@ function responseJSON (res, result) {
   }
 }
 
+
 module.exports = {
   add (req, res) {
     pool.getConnection((err, connection) => {
@@ -23,6 +24,7 @@ module.exports = {
         throw err;
       }
       const p = req.body;
+
       const md5 = crypto.createHash('md5');
       md5.update(p.password);
       p.password = md5.digest('hex');
@@ -36,7 +38,7 @@ module.exports = {
           if (result && result.name && result.name === p.name) {
             // exist
             result = {
-              code: 4001,
+              code: 3001,
               data: null,
               msg: 'Username has exist.'
             };
@@ -50,27 +52,29 @@ module.exports = {
       })
         .then((hasName) => {
           if (!hasName) {
-            connection.query(sql.queryByEmail, p.email, (error, result) => {
-              if (error) {
-                throw error;
-              }
-              result = result[0];
-              if (result && result.email && result.email === p.email) {
-                // exist
-                result = {
-                  code: 4002,
-                  data: null,
-                  msg: 'Email has exist.'
-                };
-                responseJSON(res, result);
-                // resolve(true);
-                return true;
-              } else {
-                // unexist
-                // resolve(false);
-                return false;
-              }
+            return new Promise((resolve, reject) => {
+              connection.query(sql.queryByEmail, p.email, (error, result) => {
+                if (error) {
+                  reject(error);
+                }
+                result = result[0];
+                if (result && result.email && result.email === p.email) {
+                  // exist
+                  result = {
+                    code: 3002,
+                    data: null,
+                    msg: 'Email has exist.'
+                  };
+                  responseJSON(res, result);
+                  resolve(true);
+                } else {
+                  // unexist
+                  resolve(false);
+                }
+              });
             });
+          } else {
+            return true;
           }
         })
         .then((hasEmail) => {
