@@ -100,6 +100,7 @@ app.use('/account', require('./routes/account'));
 app.use('/upload', require('./routes/upload'));
 app.use('/mail', require('./routes/mail'));
 app.use('/idea', require('./routes/idea'));
+app.use('/signup', require('./routes/signup'));
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
