@@ -6,7 +6,24 @@ const https = require('https');
 const request = require('request');
 const dao = require('./dao');
 
+// const passport = require('passport');
+// Login with GitHub
 const passport = require('passport');
+const GithubStrategy = require('passport-github').Strategy;
+// const OAuthConfig = require('./config/OAuthConfig');
+passport.use('github', new GithubStrategy({
+  clientID: OAuthConfig.ClientID,
+  clientSecret: OAuthConfig.ClientSecret,
+  callbackURL: OAuthConfig.CallbackURL
+}, (accessToken, refreshToken, profile, cb) => {
+  return cb(null, profile);
+}));
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+passport.deserializeUser((obj, cb) => {
+  cb(null, obj);
+});
 
 const captcha = new Geetest({
   geetest_id: '1072274d4348139f7f7f5b1f6a4098d2',

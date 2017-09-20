@@ -2,6 +2,43 @@ const mysql = require('mysql');
 const crypto = require('crypto');
 const conf = require('../../config/db');
 const sql = require('./sql');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+passport.use(
+  new LocalStrategy(((email, password, done) => {
+    findByEmail(email, (err, user) => {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false);
+      }
+      if (user.password !== password) {
+        return done(null, false);
+      }
+      return done(null, user);
+    });
+  }))
+);
+passport.serializeUser((user,done) => {
+  done(null,user.email);
+});
+
+passport.deserializeUser((email,done) => {
+  done(null,{email: email});
+});
+
+function findByEmail (email, callback) {
+  return pool.getConnection((err, connection) => {
+    if (err) {
+      throw err;
+    }
+    return connection.query(sql.queryByEmail, email, (error, result) => {
+      result = result[0];
+      return callback(error, result);
+    });
+  });
+}
 
 const pool = mysql.createPool(conf.mysql);
 
@@ -54,7 +91,6 @@ module.exports = {
             };
 
             responseJSON(res, resResult);
-
           } else {
             result = {
               code: 3004,

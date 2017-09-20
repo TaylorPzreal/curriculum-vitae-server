@@ -11,23 +11,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-// Login with GitHub
+// // Login with GitHub
 const passport = require('passport');
-const GithubStrategy = require('passport-github').Strategy;
-const OAuthConfig = require('./config/OAuthConfig');
-passport.use(new GithubStrategy({
-  clientID: OAuthConfig.ClientID,
-  clientSecret: OAuthConfig.ClientSecret,
-  callbackURL: OAuthConfig.CallbackURL
-}, (accessToken, refreshToken, profile, cb) => {
-  return cb(null, profile);
-}));
-passport.serializeUser((user, cb) => {
-  cb(null, user);
-});
-passport.deserializeUser((obj, cb) => {
-  cb(null, obj);
-});
 
 const app = express();
 app.use(helmet()); // secure my express apps by setting various HTTP headers.
@@ -40,6 +25,11 @@ app.use(require('compression')());
 const redisClient = redis.createClient(6379, '127.0.0.1', {
   auth_pass: '521morning'
 });
+
+redisClient.on('error', (error) => {
+  console.error(error);
+});
+
 // 设置Express的session存储中间件
 app.use(cookieParser());
 app.use(expressSession({
@@ -49,7 +39,7 @@ app.use(expressSession({
   }),
   secret: '521morning',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
     maxAge: 1 * 24 * 60 * 60 * 1000
   }
@@ -125,7 +115,7 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
+  res.sendStatus(err.status || 500);
   res.json({error: err});
 
 });
