@@ -66,7 +66,8 @@ app.use(passport.session());
 
 // ============ 支持跨域请求 =============//
 // app.all('*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+//   res.header('Access-Control-Allow-Credentials', true);
 //   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
 //   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
 //   // res.header("X-Powered-By", ' 3.2.1')
@@ -101,6 +102,7 @@ app.use('/upload', require('./routes/upload'));
 app.use('/mail', require('./routes/mail'));
 app.use('/idea', require('./routes/idea'));
 app.use('/signup', require('./routes/signup'));
+app.use('/login', require('./routes/login'));
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
