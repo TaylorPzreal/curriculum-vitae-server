@@ -2,3 +2,4 @@
 /config/db.js
 /coverage
 yarn-error.log
+/.vscode

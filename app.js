@@ -84,19 +84,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ============ 支持跨域请求 =============//
-app.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('X-Frame-Options', 'ALLOW-FROM');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-  // res.header("X-Powered-By", ' 3.2.1')
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200); /* 让options请求快速返回*/
-  } else { 
-    next();
-  }
-});
+// app.all('*', (req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('X-Frame-Options', 'ALLOW-FROM');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+//   // res.header("X-Powered-By", ' 3.2.1')
+//   if (req.method === 'OPTIONS') {
+//     res.sendStatus(200); /* 让options请求快速返回*/
+//   } else { 
+//     next();
+//   }
+// });
 // ============ 跨域 End ===============//
 
 // 所有请求都验证用户是否已经登录
@@ -113,7 +113,10 @@ app.all('*', (req, res, next) => {
 
 // 添加 access_token
 app.use('*', (req, res, next) => {
-  res.cookie('access_token', `hm${new Date().valueOf()}`);
+  // 如果没有，set cookie
+  if (!req.cookies['access_token']) {
+    res.cookie('access_token', `hm${new Date().valueOf()}`);
+  }
   next();
 });
 
