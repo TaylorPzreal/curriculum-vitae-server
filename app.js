@@ -112,13 +112,13 @@ app.use(passport.session());
 // });
 
 // 添加 access_token
-app.use('*', (req, res, next) => {
-  // 如果没有，set cookie
-  if (!req.cookies['access_token']) {
-    res.cookie('access_token', `hm${new Date().valueOf()}`);
-  }
-  next();
-});
+// app.use('*', (req, res, next) => {
+//   // 如果没有，set cookie
+//   if (!req.cookies['access_token']) {
+//     res.cookie('access_token', `hm${new Date().valueOf()}`);
+//   }
+//   next();
+// });
 
 // ============ Route Start ==========//
 app.use('/', require('./routes/index'));
