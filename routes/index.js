@@ -55,7 +55,7 @@ function getTicket(token) {
 
 router.post('/wechat/generate/signature', (req, res) => {
   const timestamp = parseInt(new Date().getTime() / 1000);
-  const noncestr = Math.random().toString(36).substr(2, 15);
+  const noncestr = randomstring.generate(16); // Math.random().toString(36).substr(2, 15);
   const url = req.body.url; // local website url
   let jsapi_ticket = req.cookies.jsapi_ticket;
   let access_token = req.cookies.access_token;
