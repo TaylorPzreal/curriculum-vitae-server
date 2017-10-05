@@ -13,7 +13,7 @@
     "cookie-parser": "~1.4.3",
     "crypto": "^0.0.3",
     "debug": "~2.6.3",
-    "express": "~4.15.2",
+    "express": "~4.16.0",
     "express-session": "^1.15.3",
     "gt3-sdk": "^2.0.0",
     "helmet": "^3.8.1",
