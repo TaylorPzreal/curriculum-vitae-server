@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+//  --------- 启动服务 --------- //
+
 /**
  * Module dependencies.
  */

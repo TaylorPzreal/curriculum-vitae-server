@@ -1,5 +1,5 @@
 const express = require('express');
-const helmet = require('helmet');
+const helmet = require('helmet'); // secure
 
 // =============Redis===========//
 const redis = require('redis');
@@ -41,7 +41,7 @@ app.use(expressSession({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 1 * 24 * 60 * 60 * 1000
+    maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
   }
 }));
 
@@ -132,6 +132,7 @@ app.use('/mail', require('./routes/mail'));
 app.use('/idea', require('./routes/idea'));
 app.use('/signup', require('./routes/signup'));
 app.use('/login', require('./routes/login'));
+app.use('/auth', require('./src/auth'));
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
@@ -156,7 +157,7 @@ app.use((err, req, res, next) => {
   // render the error page
   res.sendStatus(err.status || 500);
   res.json({error: err});
-
+  next(err);
 });
 
 module.exports = app;
