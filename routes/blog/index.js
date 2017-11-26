@@ -3,7 +3,7 @@ const router = express.Router();
 const blogDao = require('./dao');
 
 router.get('/queryByTitleId/:titleId', (req, res, next) => {
-  blogDao.queryByTitleId(req, res, next);  
+  blogDao.queryByTitleId(req, res, next);
 });
 
 router.get('/queryAll', (req, res, next) => {

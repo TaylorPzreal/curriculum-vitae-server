@@ -1,3 +1,5 @@
+const pass = require('./password.js');
+
 // MySQL 数据库连接配置
 module.exports = {
   mysql: {
@@ -5,7 +7,7 @@ module.exports = {
     host: '127.0.0.1',
     port: 3306,
     user: 'root',
-    password: '',
+    password: pass.mysql,
     database: 'honeymorning'
   }
 };

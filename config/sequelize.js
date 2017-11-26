@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
+const pass = require('./password');
 
 const config = {
   database: 'honeymorning',
   username: 'root',
-  password: '',
+  password: pass.mysql,
   host: 'localhost',
   port: 3306
 };
