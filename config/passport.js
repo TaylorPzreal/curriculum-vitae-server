@@ -27,14 +27,14 @@ const AccountModel = sequelize.define('user', {
   timestamps: false
 });
 
-passport.use('local', new LocalStrategy({
-  usernameField: 'username',
+passport.use('local-login', new LocalStrategy({
+  usernameField: 'email',
   passwordField: 'password'
-}, (username, password, done) => {
+}, (email, password, done) => {
   console.warn(req);
   AccountModel.findOne({
     where: {
-      username
+      email
     }
   }).then((res) => {
     const result = res.dataValues;
