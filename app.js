@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 // passport local
-// const passport = require('passport');
 const passport = require('./config/passport');
 
 // common router
@@ -122,10 +121,10 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
 
   // set locals, only providing error in development
-  res.locals.message = err.message;
+  res.locals.message = err.msg;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page

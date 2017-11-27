@@ -6,8 +6,8 @@ const Geetest = require('gt3-sdk');
 const geetestConfig = require('../../config/password').geetest;
 const captcha = new Geetest(geetestConfig);
 
-router.post('/login', passport.authenticate('local', {}), (req, res, next) => {
-  console.warn('get login');
+router.post('/login', passport.authenticate('local'), (req, res, next) => {
+  console.warn('login test');
 });
 
 module.exports = router;
