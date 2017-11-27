@@ -13,16 +13,15 @@ sequelize.authenticate().then(() => {
 
 const AccountModel = sequelize.define('user', {
   uid: {
-    type: Sequelize.STRING(50),
+    type: Sequelize.INTEGER(11),
   },
-  name: Sequelize.STRING(100),
+  name: Sequelize.STRING(16),
   password: Sequelize.STRING(45),
   email: Sequelize.STRING(45),
-  gender: Sequelize.INTEGER(4),
-  birth: Sequelize.STRING(10),
-  createdAt: Sequelize.BIGINT(13),
-  updatedAt: Sequelize.BIGINT(13),
-  version: Sequelize.INTEGER(3)
+  gender: Sequelize.BOOLEAN,
+  birth: Sequelize.BIGINT,
+  create_time: Sequelize.BIGINT(13),
+  update_time: Sequelize.BIGINT(13)
 }, {
   timestamps: false
 });
@@ -31,22 +30,20 @@ passport.use('local-login', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
 }, (email, password, done) => {
-  console.warn(req);
   AccountModel.findOne({
     where: {
-      email
+      email: email
     }
   }).then((res) => {
-    const result = res.dataValues;
-
-    if (result !== null) {
-      if (result.password === password) {
-        return done(null, result);
+    if (res && !res.dataValues) {
+      const user = res.dataValues;
+      if (user.password === password) {
+        return done(null, user);
       } else {
-        return done(null, false, 'Password false.')
+        return done(null, false, 'Password false.');
       }
     } else {
-      return done(null, false, 'Username not found.')
+      return done(null, false, 'Email not found.');
     }
   }).catch((err) => {
     console.error(err);
@@ -72,6 +69,7 @@ passport.deserializeUser(async (uid, done) => {
       user = res.dataValues;
     });
 
+    delete user.password; // Don't transfer password
     done(null, user);
   } catch(err) {
     done(err);

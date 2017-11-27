@@ -100,10 +100,10 @@ router.get('/login/github/return', passport.authenticate('github', {
 });
 router.get('/profile', (req, res) => {
   console.warn(req.session);
-  if (req && req.session && req.session.user) {
+  if (req && req.session && req.user) {
     res.json({
       code: 2000,
-      data: req.session.user,
+      data: req.user,
       msg: 'success'
     });
   } else {
