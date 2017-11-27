@@ -21,6 +21,11 @@ app.use(require('compression')());
 
 // 设置Express的session存储中间件
 app.use(cookieParser());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(expressSession({
   name: 'sid',
   store: RedisStore,
@@ -54,12 +59,6 @@ app.use(expressSession({
   cookie: {
     maxAge: 7200 * 1000 // 2h
   }
-}));
-
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
 }));
 
 // use passport
