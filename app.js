@@ -2,7 +2,8 @@ const express = require('express');
 const helmet = require('helmet'); // secure
 const logger = require('morgan');
 const expressSession = require('express-session');
-const RedisStore = require('./config/redis-store');
+const RedisStore = require('connect-redis')(expressSession);
+const redisClient = require('./config/redis-client');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
@@ -27,11 +28,13 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(expressSession({
-  name: 'sid',
-  store: RedisStore,
-  secret: 'skjdfiwnckjfwmlkrfondflewroisnfskdjfoendkfjiwehhf',
+  name: 'sessionId',
+  store: new RedisStore({
+    client: redisClient
+  }),
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
   }
@@ -40,10 +43,12 @@ app.use(expressSession({
 // 缓存Wechat token
 app.use(expressSession({
   name: 'access_token',
-  store: RedisStore,
-  secret: 'skjdfiwnckjfwmlkrfondflewroisnfskdjfoendkfjiwehhf',
+  store: new RedisStore({
+    client: redisClient
+  }),
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 7200 * 1000 // 2h
   }
@@ -52,10 +57,12 @@ app.use(expressSession({
 // 缓存 Wechat jsapi_ticket
 app.use(expressSession({
   name: 'jsapi_ticket',
-  store: RedisStore,
-  secret: 'skjdfiwnckjfwmlkrfondflewroisnfskdjfoendkfjiwehhf',
+  store: new RedisStore({
+    client: redisClient
+  }),
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 7200 * 1000 // 2h
   }

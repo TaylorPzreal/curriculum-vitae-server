@@ -6,9 +6,26 @@ const Geetest = require('gt3-sdk');
 const geetestConfig = require('../../config/password').geetest;
 const captcha = new Geetest(geetestConfig);
 
+// router.post('/login', passport.authenticate('local-login'), (req, res, next) => {
+//   res.send({
+//     code: 2000,
+//     data: null,
+//     msg: 'success'
+//   })
+// });
+
 router.post('/login', (req, res, next) => {
-  return passport.authenticate('local-login', (err, user, info, status) => {
+  passport.authenticate('local-login', (err, user, info, status) => {
   if (user) {
+    res.cookie('isLogin', 'true'); // set login cookie
+
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Login serializeUser false');
+        console.error(err);
+      }
+    });
+
     res.send({
       code: 2000,
       data: user,
@@ -22,6 +39,23 @@ router.post('/login', (req, res, next) => {
     });
   }
   })(req, res, next);
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logOut(); // make req.user = null
+  req.session.destroy(() => {
+    res.clearCookie('sessionId', {});
+    res.clearCookie('isLogin', {});
+    res.json({
+      code: 2000,
+      data: null,
+      msg: 'Log out success'
+    });
+  });
+});
+
+router.post('/signup', (req, res, next) => {
+
 });
 
 router.get('/profile', (req, res) => {

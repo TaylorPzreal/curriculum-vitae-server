@@ -52,11 +52,12 @@ passport.use('local-login', new LocalStrategy({
   });
 }));
 
-// 用户登录成功以后，把用户uid存储到session中
+// 用户登录成功以后，把用户uid存储到（序列化）session中
 passport.serializeUser((user, done) => {
   done(null, user.uid);
 });
 
+// 从session反序列化，若存在，则从数据库中取出数据，并存储到 req.user 中
 passport.deserializeUser(async (uid, done) => {
   try {
     let user;
