@@ -35,21 +35,20 @@ passport.use('local-login', new LocalStrategy({
       email: email
     }
   }).then((res) => {
-    if (res && !res.dataValues) {
+    if (res && res.dataValues) {
       const user = res.dataValues;
       if (user.password === password) {
+        delete user.password; // don't transfer password
         return done(null, user);
       } else {
-        return done(null, false, 'Password false.');
+        return done(null, false, 'Password wrong');
       }
     } else {
-      return done(null, false, 'Email not found.');
+      return done(null, false, 'Email not found');
     }
   }).catch((err) => {
     console.error(err);
-    return done(null, false, {
-      message: err
-    });
+    return done(err);
   });
 }));
 
