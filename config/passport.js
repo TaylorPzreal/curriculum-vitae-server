@@ -1,30 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
-const Sequelize = require('sequelize');
-const SequelizeInstance = require('./sequelize');
-
-const sequelize = SequelizeInstance();
-sequelize.authenticate().then(() => {
-  console.warn('Connect database has been established successfully');
-}).catch((err) => {
-  console.error('Unable to connect to the database: ', err);
-});
-
-const AccountModel = sequelize.define('user', {
-  uid: {
-    type: Sequelize.INTEGER(11),
-  },
-  name: Sequelize.STRING(16),
-  password: Sequelize.STRING(45),
-  email: Sequelize.STRING(45),
-  gender: Sequelize.BOOLEAN,
-  birth: Sequelize.BIGINT,
-  create_time: Sequelize.BIGINT(13),
-  update_time: Sequelize.BIGINT(13)
-}, {
-  timestamps: false
-});
+const AccountModel = require('../models/account.model');
 
 passport.use('local-login', new LocalStrategy({
   usernameField: 'email',
@@ -32,7 +8,7 @@ passport.use('local-login', new LocalStrategy({
 }, (email, password, done) => {
   AccountModel.findOne({
     where: {
-      email: email
+      email
     }
   }).then((res) => {
     if (res && res.dataValues) {
@@ -63,7 +39,7 @@ passport.deserializeUser(async (uid, done) => {
     let user;
     await AccountModel.findOne({
       where: {
-        uid: uid
+        uid
       }
     }).then((res) => {
       user = res.dataValues;
@@ -71,7 +47,7 @@ passport.deserializeUser(async (uid, done) => {
 
     delete user.password; // Don't transfer password
     done(null, user);
-  } catch(err) {
+  } catch (err) {
     done(err);
   }
 });

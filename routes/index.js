@@ -10,7 +10,5 @@ app.use('/account', require('./account'));
 app.use('/upload', require('./upload'));
 app.use('/mail', require('./mail'));
 app.use('/idea', require('./idea'));
-// app.use('/signup', require('./signup'));
-// app.use('/login', require('./login'));
 
 module.exports = app;
