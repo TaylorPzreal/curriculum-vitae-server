@@ -40,7 +40,6 @@
     "no-loop-func": "error",
     "prefer-rest-params": "error",
     "no-new-func": "error",
-    "space-before-function-paren": ["error", "always"],
     "space-before-blocks": ["error", "always"],
     "no-param-reassign": ["error", {
       "props": true

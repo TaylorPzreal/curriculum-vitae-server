@@ -11,7 +11,7 @@ sequelize.authenticate().then(() => {
 // User Model
 const AccountModel = sequelize.define('user', {
   uid: {
-    type: Sequelize.INTEGER(11),
+    type: Sequelize.STRING(15),
   },
   name: Sequelize.STRING(16),
   password: Sequelize.STRING(45),

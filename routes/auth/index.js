@@ -47,35 +47,80 @@ router.get('/logout', (req, res) => {
   });
 });
 
-router.post('/signup', (req, res, next) => {
-  console.warn(req.body);
-  const param = req.body;
-  if (!param.name || !param.email || !param.password) {
-    res.json({
-      code: 9001,
-      data: null,
-      msg: 'All input box you can not be null'
-    });
-  }
-
-  // validate name exist
-  AccountModel.findOne({
+function hasExistName(name) {
+  return AccountModel.findOne({
     where: {
-      name: param.name
+      name
     }
   }).then((result) => {
     if (result && result.dataValues) {
-      res.json({
-        code: 9002,
-        data: null,
-        msg: 'name has exist'
-      });
+      return true;
     } else {
       return false;
     }
   }).catch((err) => {
     console.error(err);
   });
+}
+
+function hasExistEmail(email) {
+  return AccountModel.findOne({
+    where: {
+      email
+    }
+  }).then((result) => {
+    if (result && result.dataValues) {
+      return true;
+    } else {
+      return false;
+    }
+  }).catch((err) => {
+    console.error(err);
+  });
+}
+
+router.post('/signup', async(req, res, next) => {
+  const param = req.body;
+
+  if (!param.name || !param.email || !param.password) {
+    res.json({
+      code: 9001,
+      data: null,
+      msg: 'All items you must input not null'
+    });
+  }
+
+  // validate name exist
+  const hasName = await hasExistName(param.name);
+  if (hasName) {
+    res.json({
+      code: 9002,
+      data: null,
+      msg: 'name has exist'
+    });
+  } else {
+    const hasEmail = await hasExistEmail(param.email);
+    if (hasEmail) {
+      res.json({
+        code: 9003,
+        data: null,
+        msg: 'email has exist'
+      });
+    } else {
+      AccountModel.create({
+        uid: `hm${new Date().valueOf()}`,
+        name: param.name,
+        email: param.email,
+        password: param.password
+      });
+
+      res.json({
+        code: 2000,
+        data: null,
+        msg: 'Sign up success'
+      });
+    }
+  }
 });
 
 router.get('/profile', (req, res) => {
