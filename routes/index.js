@@ -4,7 +4,7 @@ const app = express();
 app.use('/auth', require('./auth'));
 app.use('/users', require('./users'));
 app.use('/crawler', require('./crawler'));
-app.use('/blog', require('./blog'));
+app.use(require('./blog'));
 app.use('/movie', require('./movie'));
 app.use('/account', require('./account'));
 app.use('/upload', require('./upload'));

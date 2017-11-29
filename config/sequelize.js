@@ -16,7 +16,8 @@ function SequelizeInstance() {
     pool: {
       max: 5,
       min: 0,
-      idle: 30000
+      idle: 30000,
+      acquire: 30000
     },
     operatorsAliases: false
   });
