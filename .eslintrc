@@ -80,7 +80,7 @@
       "ignoreChainWithDepth": 3
     }],
     "space-in-parens": "error",
-    "max-len": ["error", 100],
+    "max-len": ["error", 120],
     "comma-style": ["error", "last"]
   }
 }
