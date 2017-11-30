@@ -11,8 +11,8 @@ sequelize.authenticate().then(() => {
 const BlogModel = sequelize.define('blog', {
   titleId: Sequelize.STRING(45),
   title: Sequelize.STRING(100),
-  create_time: Sequelize.DATE,
-  update_time: Sequelize.DATE,
+  createTime: Sequelize.DATE,
+  updateTime: Sequelize.DATE,
   detail: Sequelize.TEXT,
   tag: Sequelize.STRING(45),
   summary: Sequelize.STRING(255),

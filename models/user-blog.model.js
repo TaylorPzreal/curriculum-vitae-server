@@ -15,8 +15,8 @@ const UserBlogModel = sequelize.define('user_blog_realtion', {
     allowNull: false,
     autoIncrement: true
   },
-  user_id: Sequelize.INTEGER(11),
-  blog_id: Sequelize.INTEGER(11)
+  userId: Sequelize.INTEGER(11),
+  blogId: Sequelize.INTEGER(11)
 }, {
   timestamps: false
 });

@@ -10,7 +10,7 @@ const AccountModel = require('../../models/account.model');
 router.post('/login', (req, res, next) => {
   passport.authenticate('local-login', (err, user, info, status) => {
     if (user) {
-      res.cookie('isLogin', 'true'); // set login cookie
+      // res.cookie('isLogin', 'true'); // set login cookie
 
       req.login(user, err => {
         if (err) {
@@ -36,9 +36,11 @@ router.post('/login', (req, res, next) => {
 
 router.get('/logout', (req, res) => {
   req.logOut(); // make req.user = null
+  req.isAuthenticated();
+  req.user;
   req.session.destroy(() => {
     res.clearCookie('sessionId', {});
-    res.clearCookie('isLogin', {});
+    // res.clearCookie('isLogin', {});
     res.json({
       code: 2000,
       data: null,

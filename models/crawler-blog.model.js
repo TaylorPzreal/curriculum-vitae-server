@@ -13,8 +13,8 @@ const CrawlerBlogModel = sequelize.define('crawler_blog', {
   title: Sequelize.STRING(100),
   logo: Sequelize.STRING(255),
   visites: Sequelize.INTEGER(11),
-  create_time: Sequelize.DATE,
-  update_time: Sequelize.DATE,
+  createTime: Sequelize.DATE,
+  updateTime: Sequelize.DATE,
   detail: Sequelize.TEXT,
   author: Sequelize.STRING(45)
 }, {

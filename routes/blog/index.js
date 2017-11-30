@@ -7,7 +7,44 @@ const AccountModel = require('../../models/account.model');
 
 // add blog
 router.post('/blog', (req, res, next) => {
-  console.warn(req.method);
+  const p = req.body;
+  // validate space
+  if (!p.title || !p.detail || !p.tag || !p.summary) {
+    res.json({
+      code: 4001,
+      data: null,
+      msg: 'You must input some words.'
+    });
+    return;
+  }
+
+  // validate is logged in
+  if (req.isUnauthenticated()) {
+    res.json({
+      code: 3999,
+      data: null,
+      msg: 'no authenticated'
+    });
+    return;
+  }
+  BlogModel.create({
+    titleId: `hmpost${new Date().valueOf()}`,
+    title: p.title,
+    detail: p.detail,
+    tag: p.tag,
+    summary: p.summary,
+    coverImage: p.coverImage
+  }).then((result) => {
+    console.warn(result.dataValues.id);
+    UserBlogModel.create({
+      userId: req.user.id,
+      blogId: result.dataValues.id
+    }).catch((err) => {
+      console.error(err);
+    });
+  }).catch((err) => {
+    console.error(err);
+  });
 });
 
 // update blog
@@ -19,8 +56,56 @@ router.put('/blog', (req, res, next) => {});
 // delete blog by id
 router.delete('/blog/:id', (req, res, next) => {});
 
-router.get('/queryByTitleId/:titleId', (req, res, next) => {
-  blogDao.queryByTitleId(req, res, next);
+// find one blog detail by titleId
+router.get('/blog/:md5', async (req, res, next) => {
+  const md5 = req.params.md5;
+
+  let blog;
+  let user;
+  let blogId;
+  let userId;
+
+  await BlogModel.findOne({
+    where: {
+      titleId: md5
+    }
+  }).then((result) => {
+    blog = result.dataValues;
+    blogId = result.dataValues.id;
+  }).catch((err) => {
+    console.error(err);
+  });
+
+  await UserBlogModel.findOne({
+    where: {
+      blogId
+    }
+  }).then((result) => {
+    userId = result.dataValues.userId;
+  }).catch((err) => {
+    console.error(err);
+  });
+
+  await AccountModel.findOne({
+    where: {
+      id: userId
+    }
+  }).then((result) => {
+    const tmp = result.dataValues;
+    user = {
+      author: tmp.name,
+      authorId: tmp.uid,
+      logo: tmp.logo
+    };
+  }).catch((err) => {
+    console.error(err);
+  });
+
+  res.json({
+    code: 2000,
+    data: Object.assign({}, blog, user),
+    msg: null
+  });
 });
 
 /**
@@ -38,11 +123,11 @@ async function formatBlogs(blogs) {
 
     await UserBlogModel.findOne({
       where: {
-        blog_id: blogId
+        blogId
       }
     })
       .then(result => {
-        userId = result.dataValues.user_id;
+        userId = result.dataValues.userId;
       })
       .catch(err => {
         console.error(err);
@@ -74,8 +159,8 @@ async function formatBlogs(blogs) {
 }
 
 // get all blogs
-router.get('/blog', (req, res, next) => {
-  const page = +req.query.page || 1;
+router.get('/blogs/:page', (req, res, next) => {
+  const page = +req.params.page || 1;
   BlogModel.findAndCountAll({
     where: {},
     offset: (page - 1) * 9,
@@ -102,28 +187,6 @@ router.get('/blog', (req, res, next) => {
     .catch(err => {
       console.error(err);
     });
-});
-
-// get blogs by page
-router.get('/blog/:page', (req, res, next) => {
-  blogDao.queryByPage(req, res, next);
-});
-
-router.get('/queryTop10Hot', (req, res, next) => {
-  blogDao.queryTop10Hot(req, res, next);
-});
-
-router.post('/edit', (req, res, next) => {
-  const p = req.body;
-  if (p.id) {
-    blogDao.updateBlog(req, res, next);
-  } else {
-    blogDao.saveBlog(req, res, next);
-  }
-});
-
-router.get('/querySelf/:page', (req, res, next) => {
-  blogDao.querySelf(req, res, next);
 });
 
 /**

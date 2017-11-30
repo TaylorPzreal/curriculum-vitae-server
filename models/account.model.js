@@ -18,8 +18,8 @@ const AccountModel = sequelize.define('user', {
   email: Sequelize.STRING(45),
   gender: Sequelize.BOOLEAN,
   birth: Sequelize.BIGINT,
-  create_time: Sequelize.BIGINT(13),
-  update_time: Sequelize.BIGINT(13),
+  createTime: Sequelize.BIGINT(13),
+  updateTime: Sequelize.BIGINT(13),
   logo: Sequelize.STRING(255)
 }, {
   timestamps: false
