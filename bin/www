@@ -39,7 +39,7 @@ wss.on('connection', function connection(ws, req) {
 
     // Broadcast all
     wss.clients.forEach((client) => {
-      if (client === ws && client.readyState === WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(req.headers['user-agent']);
       }
     });
@@ -47,10 +47,6 @@ wss.on('connection', function connection(ws, req) {
     ws.on('message', function incoming(message) {
       console.warn('received: %s', message);
     });
-
-    setTimeout(() => {
-      ws.send('test');
-    }, 4000);
   }
 
 });
