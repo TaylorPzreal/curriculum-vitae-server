@@ -20,7 +20,6 @@
     "brace-style": ["error", "1tbs"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "object-curly-spacing": ["error", "never"],
     "array-bracket-spacing": ["error", "never"],
     "computed-property-spacing": ["error", "never"],
     "space-infix-ops": "error",
@@ -41,9 +40,6 @@
     "prefer-rest-params": "error",
     "no-new-func": "error",
     "space-before-blocks": ["error", "always"],
-    "no-param-reassign": ["error", {
-      "props": true
-    }],
     "prefer-arrow-callback": ["error", {
       "allowNamedFunctions": true,
       "allowUnboundThis": true
