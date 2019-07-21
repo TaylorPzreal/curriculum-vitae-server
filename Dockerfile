@@ -1,5 +1,5 @@
 FROM daocloud.io/node:8
-MAINTAINER TaylorPzreal
+LABEL MAINTAINER="TaylorPzreal"
 
 ENV HTTP_PORT=8000
 
