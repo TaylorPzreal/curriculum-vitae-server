@@ -37,6 +37,9 @@
     systemctl is-enabled mysql.service # 开机自启动MySQL （安装完之后默认是开机启动的）
     ```
 - 开发和生产环境数据库同步 [查看原文](https://taylorpzreal.blogspot.com/2017/07/how-to-migrate-mysql-database-between.html)
+
+> 环境变量 export PATH=${PATH}:/usr/local/mysql/bin/
+
     ```sh
     mysqldump -u root -p --opt [database name] > [database name].sql
 
@@ -44,6 +47,7 @@
 
     mysql -u root -p newdatabase < /path/to/newdatabase.sql
     ```
+
 ### 2. Install Nginx
 
 - [官网Installition](https://www.nginx.com/resources/wiki/start/topics/tutorials/install/)

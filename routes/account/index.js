@@ -92,7 +92,7 @@ router.get('/login/github/return', passport.authenticate('github', {
     }
 
     req.session.user = user;
-    res.cookie('isLogin', 'true');
+    // res.cookie('isLogin', 'true');
     res.redirect('/');
   }).catch((err) => {
     throw err;
@@ -100,10 +100,10 @@ router.get('/login/github/return', passport.authenticate('github', {
 });
 router.get('/profile', (req, res) => {
   console.warn(req.session);
-  if (req && req.session && req.session.user) {
+  if (req && req.session && req.user) {
     res.json({
       code: 2000,
-      data: req.session.user,
+      data: req.user,
       msg: 'success'
     });
   } else {
@@ -195,7 +195,7 @@ router.get('/logout', (req, res, next) => {
   req.session.destroy(() => {
     // req.session.user = null;
     res.clearCookie('user', {});
-    res.cookie('isLogin', 'false');
+    // res.cookie('isLogin', 'false');
     res.json({
       code: 2000,
       data: null,

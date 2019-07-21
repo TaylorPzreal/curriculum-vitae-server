@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+//  --------- 启动服务 --------- //
+
 /**
  * Module dependencies.
  */
@@ -14,38 +16,52 @@ const http = require('http');
 const httpPort = normalizePort(process.env.PORT || '3000');
 
 app.set('port', httpPort);
-
-/**
- * Create HTTP server.
- */
-
 const httpServer = http.createServer(app);
 
-// ============ Socket.io =========//
-const io = require('socket.io')(httpServer);
+// websocket Start
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({server: httpServer});
 
-// app.use('/chat', (req, res, next) => {
+function heartbeat() {
+  this.isAlive = true;
+}
 
-io.on('connection', (socket) => {
-  console.warn('一位新用户上线了');
-  socket.on('disconnect', () => {
-    console.warn('一个用户断开了连接');
-  });
+wss.on('connection', function connection(ws, req) {
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
+  console.warn(req.url);
+  
+  // deal home page
+  if (req.url === '/v1/home') {
+    const ip = req.connection.remoteAddress;
+    ws.send('Welcome ', ip);
+    console.warn(req);
 
-  // 监听到有新消息时，发送给所有连接的客户端
-  socket.on('chat', (msg) => {
-    io.emit('chat', msg);
-  });
+    // Broadcast all
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(req.headers['user-agent']);
+      }
+    });
+    
+    ws.on('message', function incoming(message) {
+      console.warn('received: %s', message);
+    });
+  }
 
-  // 只向新上线用户发送消息
-  socket.emit('chat', {
-    name: 'Admin',
-    logo: null,
-    msg: 'Welcome to chat.'
-  });
 });
-// });
-// ========== Sockit.io ==========//
+ 
+setInterval(function ping() {
+  wss.clients.forEach(function each(ws) {
+    if (ws.isAlive === false) {
+      return ws.terminate();
+    }
+ 
+    ws.isAlive = false;
+    ws.ping('', false, true);
+  });
+}, 30000);
+// websocket END
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -77,7 +93,6 @@ function normalizePort (val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError (error) {
   if (error.syscall !== 'listen') {
     throw error;

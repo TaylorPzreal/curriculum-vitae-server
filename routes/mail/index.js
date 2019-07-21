@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const pass = require('../../config/password');
 
 router.get('/resetPassConfirm', (req, res, next) => {
 
@@ -11,7 +12,7 @@ router.get('/resetPassConfirm', (req, res, next) => {
     // secure: true,
     auth: {
       user: 'honeymorningofficial@outlook.com',
-      pass: ''
+      pass: pass.mail
     }
   });
 

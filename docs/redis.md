@@ -1,4 +1,5 @@
 # Redis Config
+
 ## Step 1: Download & Installition
 
 ```bash
@@ -7,6 +8,7 @@ $ tar xzf redis-3.2.9.tar.gz
 $ cd redis-3.2.9
 $ make
 ```
+
 ## Step 2: Configuration
 
 ```bash

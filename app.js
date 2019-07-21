@@ -1,18 +1,17 @@
 const express = require('express');
-const helmet = require('helmet');
-
-// =============Redis===========//
-const redis = require('redis');
+const helmet = require('helmet'); // secure
+const logger = require('morgan');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
-// =============Redis ==========//
-
-const logger = require('morgan');
+const redisClient = require('./config/redis-client');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-// // Login with GitHub
-const passport = require('passport');
+// passport local
+const passport = require('./config/passport');
+
+// common router
+const router = require('./routes');
 
 const app = express();
 app.use(helmet()); // secure my express apps by setting various HTTP headers.
@@ -21,27 +20,23 @@ app.use(helmet()); // secure my express apps by setting various HTTP headers.
 app.use(require('compression')());
 // ---------- GZip End -------------//
 
-// 创建Redis客户端
-const redisClient = redis.createClient(6379, '127.0.0.1', {
-  auth_pass: '521morning'
-});
-
-redisClient.on('error', (error) => {
-  console.error(error);
-});
-
 // 设置Express的session存储中间件
 app.use(cookieParser());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(expressSession({
-  name: 'sid',
+  name: 'sessionId',
   store: new RedisStore({
     client: redisClient
   }),
-  secret: '521morning',
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 1 * 24 * 60 * 60 * 1000
+    maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
   }
 }));
 
@@ -51,9 +46,9 @@ app.use(expressSession({
   store: new RedisStore({
     client: redisClient
   }),
-  secret: '521morning',
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 7200 * 1000 // 2h
   }
@@ -65,18 +60,12 @@ app.use(expressSession({
   store: new RedisStore({
     client: redisClient
   }),
-  secret: '521morning',
+  secret: 'honeymorningjdkljfjsdiwuerzxcmlaoroq4asdasd4qwe',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 7200 * 1000 // 2h
   }
-}));
-
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
 }));
 
 // use passport
@@ -108,7 +97,6 @@ app.use(passport.session());
 //   } else { // 已登录
 //     next();
 //   }
-//   console.warn(req.session);
 // });
 
 // 添加 access_token
@@ -121,17 +109,7 @@ app.use(passport.session());
 // });
 
 // ============ Route Start ==========//
-app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/users'));
-app.use('/crawler', require('./routes/crawler'));
-app.use('/blog', require('./routes/blog'));
-app.use('/movie', require('./routes/movie'));
-app.use('/account', require('./routes/account'));
-app.use('/upload', require('./routes/upload'));
-app.use('/mail', require('./routes/mail'));
-app.use('/idea', require('./routes/idea'));
-app.use('/signup', require('./routes/signup'));
-app.use('/login', require('./routes/login'));
+app.use('/v1', router);
 // ============= Route End ========//
 
 // catch 404 and forward to error handler
@@ -140,23 +118,22 @@ app.use((req, res, next) => {
     return next(new Error('no session'));
   }
 
-  const err = new Error('Not Found');
-  err.status = 404;
+  const err = {
+    code: 404,
+    data: null,
+    msg: 'Not Found!'
+  };
   next(err);
-
 });
 
 // error handler
 app.use((err, req, res, next) => {
-
   // set locals, only providing error in development
-  res.locals.message = err.message;
+  res.locals.message = err.msg;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.sendStatus(err.status || 500);
-  res.json({error: err});
-
+  res.json(err);
 });
 
 module.exports = app;

@@ -1,0 +1,12 @@
+node_modules/  
+.git
+.gitignore
+.idea
+.DS_Store
+*.swp
+*.log
+.vscode
+.eslint
+.jsbeautifyrc
+.snyk
+.travis.yml

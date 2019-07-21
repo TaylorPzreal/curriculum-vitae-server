@@ -2,4 +2,10 @@
 /config/db.js
 /coverage
 yarn-error.log
-/.vscode
+/config/password.js
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
