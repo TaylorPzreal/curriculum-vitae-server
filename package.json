@@ -34,7 +34,7 @@
     "request": "^2.84.0",
     "sequelize": "^5.8.11",
     "serve-favicon": "^2.4.5",
-    "socket.io": "^2.0.4",
+    "socket.io": "^2.4.0",
     "superagent": "^3.8.1",
     "superagent-charset": "^1.2.0",
     "winston": "^2.4.0",
